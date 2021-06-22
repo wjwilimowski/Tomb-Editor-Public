@@ -768,7 +768,7 @@ namespace TombEditor
             }
 
             // Update position
-            instance.Position = pos;
+            instance.SetPosition(pos);
 
             // Update state
             if (instance is LightInstance)

@@ -55,11 +55,58 @@ namespace TombLib.LevelData
         bool Replace(IReplaceable other, bool withProperties);
     }
 
+    public class ObjectGroup : PositionBasedObjectInstance, IRotateableY
+    {
+        public ObjectGroup(PositionBasedObjectInstance initialObject)
+        {
+            Room = initialObject.Room;
+            Position = initialObject.Position;
+            
+            _objectInstances.Add(initialObject);
+        }
+
+        private readonly HashSet<PositionBasedObjectInstance> _objectInstances = new HashSet<PositionBasedObjectInstance>();
+
+        public void Add(PositionBasedObjectInstance objectInstance) => _objectInstances.Add(objectInstance);
+
+        private float _rotationY;
+        public float RotationY
+        {
+            get => _rotationY;
+            set
+            {
+                var difference = value - _rotationY;
+                _rotationY = value;
+                foreach (var i in _objectInstances)
+                {
+                    if (i is IRotateableY y)
+                        y.RotationY += difference;
+                }
+            }
+        }
+
+        public override void SetPosition(Vector3 position)
+        {
+            var difference = position - Position;
+            base.SetPosition(position);
+
+            foreach (var i in _objectInstances)
+                i.SetPosition(i.Position + difference);
+        }
+
+        public override void Transform(RectTransformation transformation, VectorInt2 oldRoomSize)
+        {
+            base.Transform(transformation, oldRoomSize);
+            foreach (var oi in _objectInstances)
+                oi.Transform(transformation, oldRoomSize);
+        }
+    }
+
     public abstract class ObjectInstance : ICloneable, ITriggerParameter
     {
         public delegate void RemovedFromRoomDelegate(ObjectInstance instance);
         public event RemovedFromRoomDelegate DeletedEvent;
-        public Room Room { get; private set; }
+        public Room Room { get; protected set; }
 
         public virtual ObjectInstance Clone()
         {
@@ -224,6 +271,11 @@ namespace TombLib.LevelData
     public abstract class PositionBasedObjectInstance : ObjectInstance, ISpatial
     {
         public Vector3 Position { get; set; }
+
+        public virtual void SetPosition(Vector3 position)
+        {
+            Position = position;
+        }
 
         public VectorInt2 SectorPosition
         {

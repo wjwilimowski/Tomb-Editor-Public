@@ -796,7 +796,21 @@ namespace TombEditor.Controls
                             _movementTimer.Animate(AnimationMode.GhostBlockUnfold, 0.4f);
 
                         // Select object
-                        _editor.SelectedObject = obj;
+                        if (ModifierKeys.HasFlag(Keys.Control) &&
+                            obj is PositionBasedObjectInstance positionBased &&
+                            _editor.SelectedObject is PositionBasedObjectInstance selectedPositionBased)
+                        {
+                            var objectGroup = _editor.SelectedObject as ObjectGroup ?? new ObjectGroup(selectedPositionBased);
+
+                            objectGroup.Add(positionBased);
+
+                            _editor.SelectedObject = objectGroup;
+                        }
+                        else
+                        {
+
+                            _editor.SelectedObject = obj;
+                        }
 
                         if (obj is ItemInstance)
                             _dragObjectPicked = true; // Prepare for drag-n-drop
