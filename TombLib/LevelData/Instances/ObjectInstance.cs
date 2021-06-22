@@ -72,22 +72,6 @@ namespace TombLib.LevelData
         public void Add(ItemInstance objectInstance) => _objectInstances.Add(objectInstance);
         public bool Contains(ItemInstance obInstance) => _objectInstances.Contains(obInstance);
 
-        /*private float _rotationY;
-        public float RotationY
-        {
-            get => _rotationY;
-            set
-            {
-                var difference = value - _rotationY;
-                _rotationY = value;
-                foreach (var i in _objectInstances)
-                {
-                    if (i is IRotateableY y)
-                        y.RotationY += difference;
-                }
-            }
-        }*/ // TODO
-
         public override void SetPosition(Vector3 position)
         {
             var difference = position - Position;
@@ -105,6 +89,16 @@ namespace TombLib.LevelData
         }
 
         public override ItemType ItemType { get; }
+
+        public void SetRotationY(float targetRotation)
+        {
+            var difference = targetRotation - RotationY;
+
+            RotationY = targetRotation;
+
+            foreach (var i in _objectInstances)
+                i.RotationY += difference;
+        }
     }
 
     public abstract class ObjectInstance : ICloneable, ITriggerParameter

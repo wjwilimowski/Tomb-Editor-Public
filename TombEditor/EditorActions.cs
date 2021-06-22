@@ -822,7 +822,18 @@ namespace TombEditor
                     var rotateableY = instance as IRotateableY;
                     if (rotateableY == null)
                         return;
-                    rotateableY.RotationY = angleInDegrees + (delta ? rotateableY.RotationY : 0);
+
+                    var targetRotation = angleInDegrees + (delta ? rotateableY.RotationY : 0);
+
+                    if (instance is ObjectGroup objectGroup)
+                    {
+                        objectGroup.SetRotationY(targetRotation);
+                    }
+                    else
+                    {
+                        rotateableY.RotationY = targetRotation;
+                    }
+
                     break;
                 case RotationAxis.X:
                     var rotateableX = instance as IRotateableYX;
