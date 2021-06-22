@@ -5,13 +5,12 @@ using TombLib.Utils;
 
 namespace TombLib.LevelData
 {
-    public class ObjectGroup : ItemInstance
+    public class ObjectGroup : PositionBasedObjectInstance, IRotateableY
     {
         public ObjectGroup(ItemInstance initialObject)
         {
             Room = initialObject.Room;
             Position = initialObject.Position;
-            ItemType = initialObject.ItemType;
 
 
             _objectInstances.Add(initialObject);
@@ -42,16 +41,20 @@ namespace TombLib.LevelData
                 oi.Transform(transformation, oldRoomSize);
         }
 
-        public override ItemType ItemType { get; }
+        private float _rotationY;
 
-        public void SetRotationY(float targetRotation)
+        public float RotationY
         {
-            var difference = targetRotation - RotationY;
+            get => _rotationY;
+            set
+            {
+                var difference = value - _rotationY;
 
-            RotationY = targetRotation;
+                _rotationY = value;
 
-            foreach (var i in _objectInstances)
-                i.RotationY += difference;
+                foreach (var i in _objectInstances)
+                    i.RotationY += difference;
+            }
         }
     }
 }

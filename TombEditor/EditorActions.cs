@@ -822,18 +822,7 @@ namespace TombEditor
                     var rotateableY = instance as IRotateableY;
                     if (rotateableY == null)
                         return;
-
-                    var targetRotation = angleInDegrees + (delta ? rotateableY.RotationY : 0);
-
-                    if (instance is ObjectGroup objectGroup)
-                    {
-                        objectGroup.SetRotationY(targetRotation);
-                    }
-                    else
-                    {
-                        rotateableY.RotationY = targetRotation;
-                    }
-
+                    rotateableY.RotationY = angleInDegrees + (delta ? rotateableY.RotationY : 0);
                     break;
                 case RotationAxis.X:
                     var rotateableX = instance as IRotateableYX;
@@ -854,7 +843,6 @@ namespace TombEditor
                 instance.Room.RebuildLighting(_editor.Configuration.Rendering3D_HighQualityLightPreview);
             }
              
-            // TODO - should I _editor.ObjectChange every object inside a modified ObjectGroup?
             _editor.ObjectChange(instance, ObjectChangeType.Change);
         }
 

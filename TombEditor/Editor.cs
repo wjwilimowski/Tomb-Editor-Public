@@ -611,7 +611,19 @@ namespace TombEditor
         {
             if (room == null || @object == null)
                 throw new ArgumentNullException();
-            RaiseEvent(new ObjectChangedEvent { Room = room, Object = @object, ChangeType = changeType });
+
+            if (@object is ObjectGroup objectGroup)
+            {
+                foreach (var o in objectGroup.ToObjectInstances())
+                {
+                    RaiseEvent(new ObjectChangedEvent { Room = room, Object = o, ChangeType = changeType });
+                }
+            }
+            else
+            {
+                RaiseEvent(new ObjectChangedEvent { Room = room, Object = @object, ChangeType = changeType });
+            }
+
         }
         public void ObjectChange(IEnumerable<ObjectInstance> objects, ObjectChangeType changeType)
         {

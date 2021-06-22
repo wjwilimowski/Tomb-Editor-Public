@@ -796,11 +796,15 @@ namespace TombEditor.Controls
                             _movementTimer.Animate(AnimationMode.GhostBlockUnfold, 0.4f);
 
                         // Select object
+
+                        var selectedItemInstance = _editor.SelectedObject as ItemInstance;
+                        var selectedObjectGroup = _editor.SelectedObject as ObjectGroup;
+
                         if (ModifierKeys.HasFlag(Keys.Control) &&
                             obj is ItemInstance item &&
-                            _editor.SelectedObject is ItemInstance selectedItem)
+                            (selectedItemInstance != null || selectedObjectGroup != null))
                         {
-                            var objectGroup = _editor.SelectedObject as ObjectGroup ?? new ObjectGroup(selectedItem);
+                            var objectGroup = selectedObjectGroup ?? new ObjectGroup(selectedItemInstance);
 
                             objectGroup.Add(item);
 
