@@ -6,6 +6,9 @@ using TombLib.Utils;
 
 namespace TombLib.LevelData
 {
+    /// <summary>
+    /// Represents a group of objects multi-selected by ctrl-clicking.
+    /// </summary>
     public class ObjectGroup : PositionBasedObjectInstance, IRotateableY
     {
         public ObjectGroup(ItemInstance initialObject)
@@ -57,6 +60,10 @@ namespace TombLib.LevelData
             }
         }
 
+        /// <summary>
+        /// Rotates the entire group by clicks * 90deg clockwise, preserving positions relative to the first selected object
+        /// </summary>
+        /// <param name="clicks"></param>
         public void Rotate(int clicks)
         {
             var rotationToApply = 90.0f * clicks;
