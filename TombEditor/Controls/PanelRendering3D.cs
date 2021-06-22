@@ -797,12 +797,12 @@ namespace TombEditor.Controls
 
                         // Select object
                         if (ModifierKeys.HasFlag(Keys.Control) &&
-                            obj is PositionBasedObjectInstance positionBased &&
-                            _editor.SelectedObject is PositionBasedObjectInstance selectedPositionBased)
+                            obj is ItemInstance item &&
+                            _editor.SelectedObject is ItemInstance selectedItem)
                         {
-                            var objectGroup = _editor.SelectedObject as ObjectGroup ?? new ObjectGroup(selectedPositionBased);
+                            var objectGroup = _editor.SelectedObject as ObjectGroup ?? new ObjectGroup(selectedItem);
 
-                            objectGroup.Add(positionBased);
+                            objectGroup.Add(item);
 
                             _editor.SelectedObject = objectGroup;
                         }
@@ -2451,6 +2451,7 @@ namespace TombEditor.Controls
                     _legacyDevice.SetRasterizerState(_legacyDevice.RasterizerStates.CullBack);
 
                     var color = new Vector4(0.0f, 1.0f, 0.0f, 1.0f);
+
                     if (_editor.SelectedObject == instance)
                     {
                         color = _editor.Configuration.UI_ColorScheme.ColorSelection;
@@ -2563,6 +2564,8 @@ namespace TombEditor.Controls
 
             if (_editor.SelectedRoom != null)
             {
+                var activeObjectGroup = _editor.SelectedObject as ObjectGroup;
+
                 foreach (Room room in roomsWhoseObjectsToDraw)
                     foreach (var instance in room.Objects.OfType<MoveableInstance>())
                     {
@@ -2572,7 +2575,7 @@ namespace TombEditor.Controls
                         _legacyDevice.SetRasterizerState(_legacyDevice.RasterizerStates.CullBack);
 
                         Vector4 color = new Vector4(0.4f, 0.4f, 1.0f, 1.0f);
-                        if (_editor.SelectedObject == instance)
+                        if (_editor.SelectedObject == instance || (activeObjectGroup?.Contains(instance) ?? false))
                         {
                             color = _editor.Configuration.UI_ColorScheme.ColorSelection;
                             _legacyDevice.SetRasterizerState(_rasterizerWireframe);
@@ -2603,7 +2606,7 @@ namespace TombEditor.Controls
                         _legacyDevice.SetRasterizerState(_legacyDevice.RasterizerStates.CullBack);
 
                         Vector4 color = new Vector4(0.4f, 0.4f, 1.0f, 1.0f);
-                        if (_editor.SelectedObject == instance)
+                        if (_editor.SelectedObject == instance || (activeObjectGroup?.Contains(instance) ?? false))
                         {
                             color = _editor.Configuration.UI_ColorScheme.ColorSelection;
                             _legacyDevice.SetRasterizerState(_rasterizerWireframe);

@@ -55,21 +55,24 @@ namespace TombLib.LevelData
         bool Replace(IReplaceable other, bool withProperties);
     }
 
-    public class ObjectGroup : PositionBasedObjectInstance, IRotateableY
+    public class ObjectGroup : ItemInstance
     {
-        public ObjectGroup(PositionBasedObjectInstance initialObject)
+        public ObjectGroup(ItemInstance initialObject)
         {
             Room = initialObject.Room;
             Position = initialObject.Position;
-            
+            ItemType = initialObject.ItemType;
+
+
             _objectInstances.Add(initialObject);
         }
 
-        private readonly HashSet<PositionBasedObjectInstance> _objectInstances = new HashSet<PositionBasedObjectInstance>();
+        private readonly HashSet<ItemInstance> _objectInstances = new HashSet<ItemInstance>();
 
-        public void Add(PositionBasedObjectInstance objectInstance) => _objectInstances.Add(objectInstance);
+        public void Add(ItemInstance objectInstance) => _objectInstances.Add(objectInstance);
+        public bool Contains(ItemInstance obInstance) => _objectInstances.Contains(obInstance);
 
-        private float _rotationY;
+        /*private float _rotationY;
         public float RotationY
         {
             get => _rotationY;
@@ -83,7 +86,7 @@ namespace TombLib.LevelData
                         y.RotationY += difference;
                 }
             }
-        }
+        }*/ // TODO
 
         public override void SetPosition(Vector3 position)
         {
@@ -100,6 +103,8 @@ namespace TombLib.LevelData
             foreach (var oi in _objectInstances)
                 oi.Transform(transformation, oldRoomSize);
         }
+
+        public override ItemType ItemType { get; }
     }
 
     public abstract class ObjectInstance : ICloneable, ITriggerParameter
