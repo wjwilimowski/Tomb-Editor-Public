@@ -63,8 +63,9 @@ namespace TombLib.LevelData
 
             RotationY += rotationToApply;
 
+            // The formula used goes counterclockwise - using negative clicks to go clockwise
             var sin = SinClicks(-clicks);
-            var cos = CosClicks(-clicks);
+            var cos = SinClicks(-clicks - 1);
 
             foreach (var i in _objectInstances)
             {
@@ -80,13 +81,14 @@ namespace TombLib.LevelData
             }
         }
 
+        // Get sine of the angle clicks * 90deg
         private int SinClicks(int clicks)
         {
-            var clicksModulo = clicks % 4;
+            const int nClicksInFullRotation = 4;
+
+            var clicksModulo = clicks % nClicksInFullRotation;
             if (clicksModulo < 0)
-            {
-                clicksModulo += 4;
-            }
+                clicksModulo += nClicksInFullRotation;
 
             switch (clicksModulo)
             {
@@ -98,29 +100,6 @@ namespace TombLib.LevelData
                     return 0;
                 case 3:
                     return -1;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(clicks));
-            }
-        }
-
-        private int CosClicks(int clicks)
-        {
-            var clicksModulo = clicks % 4;
-            if (clicksModulo < 0)
-            {
-                clicksModulo += 4;
-            }
-
-            switch (clicksModulo)
-            {
-                case 0:
-                    return 1;
-                case 1:
-                    return 0;
-                case 2:
-                    return -1;
-                case 3:
-                    return 0;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(clicks));
             }

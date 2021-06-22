@@ -777,5 +777,10 @@ namespace TombEditor.Forms
         {
             EditorActions.RotateSelectedObjectGroupClockwise();
         }
+
+        private void rotateObjectGroupCounterclockwiseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EditorActions.RotateSelectedObjectGroupCounterclockwise();
+        }
     }
 }

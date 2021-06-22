@@ -5015,6 +5015,7 @@ namespace TombEditor
         }
 
         public static void RotateSelectedObjectGroupClockwise() => RotateSelectedObjectGroup(1);
+        public static void RotateSelectedObjectGroupCounterclockwise() => RotateSelectedObjectGroup(-1);
 
         private static void RotateSelectedObjectGroup(int i)
         {

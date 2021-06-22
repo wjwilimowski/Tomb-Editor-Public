@@ -126,6 +126,9 @@ namespace TombEditor.Forms
             this.setStaticMeshColorToRoomLightToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setStaticMeshesColorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.makeQuickItemGroupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripMenuItem();
+            this.RotateObjectGroupClockwise = new System.Windows.Forms.ToolStripMenuItem();
             this.texturesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadTextureToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeTexturesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -208,9 +211,7 @@ namespace TombEditor.Forms
             this.dockArea = new DarkUI.Docking.DarkDockPanel();
             this.panelDockArea = new System.Windows.Forms.Panel();
             this.assToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripMenuItem();
-            this.RotateObjectGroupClockwise = new System.Windows.Forms.ToolStripMenuItem();
+            this.rotateObjectGroupCounterclockwiseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.panelDockArea.SuspendLayout();
@@ -1354,6 +1355,34 @@ namespace TombEditor.Forms
             this.makeQuickItemGroupToolStripMenuItem.Tag = "MakeQuickItemGroup";
             this.makeQuickItemGroupToolStripMenuItem.Text = "MakeQuickItemGroup";
             // 
+            // toolStripSeparator9
+            // 
+            this.toolStripSeparator9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.toolStripSeparator9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.toolStripSeparator9.Margin = new System.Windows.Forms.Padding(0, 0, 0, 1);
+            this.toolStripSeparator9.Name = "toolStripSeparator9";
+            this.toolStripSeparator9.Size = new System.Drawing.Size(256, 6);
+            // 
+            // toolStripMenuItem9
+            // 
+            this.toolStripMenuItem9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.toolStripMenuItem9.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.RotateObjectGroupClockwise,
+            this.rotateObjectGroupCounterclockwiseToolStripMenuItem});
+            this.toolStripMenuItem9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.toolStripMenuItem9.Name = "toolStripMenuItem9";
+            this.toolStripMenuItem9.Size = new System.Drawing.Size(259, 22);
+            this.toolStripMenuItem9.Text = "Object groups";
+            // 
+            // RotateObjectGroupClockwise
+            // 
+            this.RotateObjectGroupClockwise.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.RotateObjectGroupClockwise.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.RotateObjectGroupClockwise.Name = "RotateObjectGroupClockwise";
+            this.RotateObjectGroupClockwise.Size = new System.Drawing.Size(274, 22);
+            this.RotateObjectGroupClockwise.Text = "Rotate object group clockwise";
+            this.RotateObjectGroupClockwise.Click += new System.EventHandler(this.RotateObjectGroupClockwise_Click);
+            // 
             // texturesToolStripMenuItem
             // 
             this.texturesToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
@@ -2180,32 +2209,14 @@ namespace TombEditor.Forms
             this.assToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.assToolStripMenuItem.Text = "ass";
             // 
-            // toolStripSeparator9
+            // rotateObjectGroupCounterclockwiseToolStripMenuItem
             // 
-            this.toolStripSeparator9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.toolStripSeparator9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.toolStripSeparator9.Margin = new System.Windows.Forms.Padding(0, 0, 0, 1);
-            this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(256, 6);
-            // 
-            // toolStripMenuItem9
-            // 
-            this.toolStripMenuItem9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.toolStripMenuItem9.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.RotateObjectGroupClockwise});
-            this.toolStripMenuItem9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.toolStripMenuItem9.Name = "toolStripMenuItem9";
-            this.toolStripMenuItem9.Size = new System.Drawing.Size(259, 22);
-            this.toolStripMenuItem9.Text = "Object groups";
-            // 
-            // RotateObjectGroupClockwise
-            // 
-            this.RotateObjectGroupClockwise.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
-            this.RotateObjectGroupClockwise.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
-            this.RotateObjectGroupClockwise.Name = "RotateObjectGroupClockwise";
-            this.RotateObjectGroupClockwise.Size = new System.Drawing.Size(233, 22);
-            this.RotateObjectGroupClockwise.Text = "Rotate object group clockwise";
-            this.RotateObjectGroupClockwise.Click += new System.EventHandler(this.RotateObjectGroupClockwise_Click);
+            this.rotateObjectGroupCounterclockwiseToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(63)))), ((int)(((byte)(65)))));
+            this.rotateObjectGroupCounterclockwiseToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(220)))), ((int)(((byte)(220)))), ((int)(((byte)(220)))));
+            this.rotateObjectGroupCounterclockwiseToolStripMenuItem.Name = "rotateObjectGroupCounterclockwiseToolStripMenuItem";
+            this.rotateObjectGroupCounterclockwiseToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
+            this.rotateObjectGroupCounterclockwiseToolStripMenuItem.Text = "Rotate object group counterclockwise";
+            this.rotateObjectGroupCounterclockwiseToolStripMenuItem.Click += new System.EventHandler(this.rotateObjectGroupCounterclockwiseToolStripMenuItem_Click);
             // 
             // FormMain
             // 
@@ -2427,5 +2438,6 @@ namespace TombEditor.Forms
         private ToolStripSeparator toolStripSeparator9;
         private ToolStripMenuItem toolStripMenuItem9;
         private ToolStripMenuItem RotateObjectGroupClockwise;
+        private ToolStripMenuItem rotateObjectGroupCounterclockwiseToolStripMenuItem;
     }
 }
