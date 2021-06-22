@@ -972,8 +972,21 @@ namespace TombEditor
             // Make sure an object that was removed isn't selected
             if ((obj as IEditorObjectChangedEvent)?.ChangeType == ObjectChangeType.Remove)
             {
-                if (((IEditorObjectChangedEvent)obj).Object == SelectedObject)
+                var removedObject = ((IEditorObjectChangedEvent)obj).Object;
+
+                if (removedObject == SelectedObject)
+                {
                     SelectedObject = null;
+                }
+                else if (SelectedObject is ObjectGroup og && removedObject is ItemInstance item)
+                {
+                    og.Remove(item);
+
+                    if (!og.Any())
+                    {
+                        SelectedObject = null;
+                    }
+                }
             }
 
             // Update level settings watcher

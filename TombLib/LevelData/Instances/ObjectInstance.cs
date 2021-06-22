@@ -70,7 +70,9 @@ namespace TombLib.LevelData
         private readonly HashSet<ItemInstance> _objectInstances = new HashSet<ItemInstance>();
 
         public void Add(ItemInstance objectInstance) => _objectInstances.Add(objectInstance);
+        public void Remove(ItemInstance objectInstance) => _objectInstances.Remove(objectInstance);
         public bool Contains(ItemInstance obInstance) => _objectInstances.Contains(obInstance);
+        public bool Any() => _objectInstances.Any();
 
         public override void SetPosition(Vector3 position)
         {
@@ -80,6 +82,8 @@ namespace TombLib.LevelData
             foreach (var i in _objectInstances)
                 i.SetPosition(i.Position + difference);
         }
+
+        public List<ObjectInstance> ToObjectInstances() => _objectInstances.OfType<ObjectInstance>().ToList();
 
         public override void Transform(RectTransformation transformation, VectorInt2 oldRoomSize)
         {

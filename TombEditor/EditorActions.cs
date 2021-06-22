@@ -853,7 +853,8 @@ namespace TombEditor
                 instance.Room.BuildGeometry();
                 instance.Room.RebuildLighting(_editor.Configuration.Rendering3D_HighQualityLightPreview);
             }
-                
+             
+            // TODO - should I _editor.ObjectChange every object inside a modified ObjectGroup?
             _editor.ObjectChange(instance, ObjectChangeType.Change);
         }
 
@@ -1023,7 +1024,8 @@ namespace TombEditor
 
         public static void DeleteObject(ObjectInstance instance, IWin32Window owner = null)
         {
-            DeleteObjects(new List<ObjectInstance>() { instance }, owner);
+            var objectsToDelete = instance is ObjectGroup og ? og.ToObjectInstances() : new List<ObjectInstance>() { instance };
+            DeleteObjects(objectsToDelete, owner);
         }
 
         public static void DeleteObjectWithoutUpdate(ObjectInstance instance)
