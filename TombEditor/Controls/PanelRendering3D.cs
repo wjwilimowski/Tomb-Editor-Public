@@ -2564,8 +2564,6 @@ namespace TombEditor.Controls
 
             if (_editor.SelectedRoom != null)
             {
-                var activeObjectGroup = _editor.SelectedObject as ObjectGroup;
-
                 foreach (Room room in roomsWhoseObjectsToDraw)
                     foreach (var instance in room.Objects.OfType<MoveableInstance>())
                     {
@@ -2575,7 +2573,7 @@ namespace TombEditor.Controls
                         _legacyDevice.SetRasterizerState(_legacyDevice.RasterizerStates.CullBack);
 
                         Vector4 color = new Vector4(0.4f, 0.4f, 1.0f, 1.0f);
-                        if (_editor.SelectedObject == instance || (activeObjectGroup?.Contains(instance) ?? false))
+                        if (_editor.SelectedObject == instance)
                         {
                             color = _editor.Configuration.UI_ColorScheme.ColorSelection;
                             _legacyDevice.SetRasterizerState(_rasterizerWireframe);
@@ -2606,7 +2604,7 @@ namespace TombEditor.Controls
                         _legacyDevice.SetRasterizerState(_legacyDevice.RasterizerStates.CullBack);
 
                         Vector4 color = new Vector4(0.4f, 0.4f, 1.0f, 1.0f);
-                        if (_editor.SelectedObject == instance || (activeObjectGroup?.Contains(instance) ?? false))
+                        if (_editor.SelectedObject == instance)
                         {
                             color = _editor.Configuration.UI_ColorScheme.ColorSelection;
                             _legacyDevice.SetRasterizerState(_rasterizerWireframe);
@@ -2755,6 +2753,8 @@ namespace TombEditor.Controls
             if (moveablesToDraw.Count == 0)
                 return;
 
+            var activeObjectGroup = _editor.SelectedObject as ObjectGroup;
+
             _legacyDevice.SetBlendState(_legacyDevice.BlendStates.Opaque);
             var skinnedModelEffect = DeviceManager.DefaultDeviceManager.___LegacyEffects["Model"];
             skinnedModelEffect.Parameters["AlphaTest"].SetValue(HideTransparentFaces);
@@ -2800,7 +2800,10 @@ namespace TombEditor.Controls
 
                         foreach (var mov in movGroup)
                         {
-                            if (!disableSelection && _editor.SelectedObject == mov) // Selection
+                            var isSelected = _editor.SelectedObject == mov ||
+                                             activeObjectGroup != null && activeObjectGroup.Contains(mov);
+
+                            if (!disableSelection && isSelected) // Selection
                                 skinnedModelEffect.Parameters["Color"].SetValue(_editor.Configuration.UI_ColorScheme.ColorSelection);
                             else
                             {
@@ -2975,6 +2978,8 @@ namespace TombEditor.Controls
             if (staticsToDraw.Count == 0)
                 return;
 
+            var activeObjectGroup = _editor.SelectedObject as ObjectGroup;
+
             _legacyDevice.SetBlendState(_legacyDevice.BlendStates.Opaque);
             var staticMeshEffect = DeviceManager.DefaultDeviceManager.___LegacyEffects["StaticModel"];
             staticMeshEffect.Parameters["AlphaTest"].SetValue(HideTransparentFaces);
@@ -3011,7 +3016,10 @@ namespace TombEditor.Controls
 
                         foreach (var st in stGroup)
                         {
-                            if (!disableSelection && _editor.SelectedObject == st)
+                            var isSelected = _editor.SelectedObject == st ||
+                                             activeObjectGroup != null && activeObjectGroup.Contains(st);
+
+                            if (!disableSelection && isSelected)
                                 staticMeshEffect.Parameters["Color"].SetValue(_editor.Configuration.UI_ColorScheme.ColorSelection);
                             else
                             {
