@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using TombLib.Utils;
@@ -11,7 +12,6 @@ namespace TombLib.LevelData
         {
             Room = initialObject.Room;
             Position = initialObject.Position;
-
 
             _objectInstances.Add(initialObject);
         }
@@ -54,6 +54,75 @@ namespace TombLib.LevelData
 
                 foreach (var i in _objectInstances)
                     i.RotationY += difference;
+            }
+        }
+
+        public void Rotate(int clicks)
+        {
+            var rotationToApply = 90.0f * clicks;
+
+            RotationY += rotationToApply;
+
+            var sin = SinClicks(-clicks);
+            var cos = CosClicks(-clicks);
+
+            foreach (var i in _objectInstances)
+            {
+                var distance = i.Position - Position;
+                if (distance.X != 0.0f || distance.Z != 0.0f)
+                {
+                    i.SetPosition(new Vector3(
+                        distance.X * cos - distance.Z * sin + Position.X,
+                        i.Position.Y,
+                        distance.X * sin + distance.Z * cos + Position.Z
+                    ));
+                }
+            }
+        }
+
+        private int SinClicks(int clicks)
+        {
+            var clicksModulo = clicks % 4;
+            if (clicksModulo < 0)
+            {
+                clicksModulo += 4;
+            }
+
+            switch (clicksModulo)
+            {
+                case 0:
+                    return 0;
+                case 1:
+                    return 1;
+                case 2:
+                    return 0;
+                case 3:
+                    return -1;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(clicks));
+            }
+        }
+
+        private int CosClicks(int clicks)
+        {
+            var clicksModulo = clicks % 4;
+            if (clicksModulo < 0)
+            {
+                clicksModulo += 4;
+            }
+
+            switch (clicksModulo)
+            {
+                case 0:
+                    return 1;
+                case 1:
+                    return 0;
+                case 2:
+                    return -1;
+                case 3:
+                    return 0;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(clicks));
             }
         }
     }

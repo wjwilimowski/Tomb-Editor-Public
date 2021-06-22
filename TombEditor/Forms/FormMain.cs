@@ -772,5 +772,10 @@ namespace TombEditor.Forms
                     break;
             }
         }
+
+        private void RotateObjectGroupClockwise_Click(object sender, EventArgs e)
+        {
+            EditorActions.RotateSelectedObjectGroupClockwise();
+        }
     }
 }
