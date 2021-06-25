@@ -5016,18 +5016,5 @@ namespace TombEditor
                                 settings.SelectedSounds.Add(foundId);
                         }
         }
-
-        public static void RotateSelectedObjectGroupClockwise() => RotateSelectedObjectGroup(1);
-        public static void RotateSelectedObjectGroupCounterclockwise() => RotateSelectedObjectGroup(-1);
-
-        private static void RotateSelectedObjectGroup(int i)
-        {
-            if (_editor.SelectedObject is ObjectGroup group)
-            {
-                group.Rotate(i);
-
-                _editor.ObjectChange(group, ObjectChangeType.Change);
-            }
-        }
     }
 }

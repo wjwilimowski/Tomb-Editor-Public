@@ -60,34 +60,6 @@ namespace TombLib.LevelData
             }
         }
 
-        /// <summary>
-        /// Rotates the entire group by clicks * 90deg clockwise, preserving positions relative to the first selected object
-        /// </summary>
-        /// <param name="clicks"></param>
-        public void Rotate(int clicks)
-        {
-            var rotationToApply = 90.0f * clicks;
-
-            RotationY += rotationToApply;
-
-            // The formula used goes counterclockwise - using negative clicks to go clockwise
-            var sin = SinClicks(-clicks);
-            var cos = SinClicks(-clicks - 1);
-
-            foreach (var i in ObjectInstances)
-            {
-                var distance = i.Position - Position;
-                if (distance.X != 0.0f || distance.Z != 0.0f)
-                {
-                    i.SetPosition(new Vector3(
-                        distance.X * cos - distance.Z * sin + Position.X,
-                        i.Position.Y,
-                        distance.X * sin + distance.Z * cos + Position.Z
-                    ));
-                }
-            }
-        }
-
         public void RotateToDeg(float targetDeg)
         {
             var rotationToApply = targetDeg - RotationY;
@@ -110,30 +82,6 @@ namespace TombLib.LevelData
                         distance.X * sin + distance.Z * cos + Position.Z
                     ));
                 }
-            }
-        }
-
-        // Get sine of the angle clicks * 90deg
-        private int SinClicks(int clicks)
-        {
-            const int nClicksInFullRotation = 4;
-
-            var clicksModulo = clicks % nClicksInFullRotation;
-            if (clicksModulo < 0)
-                clicksModulo += nClicksInFullRotation;
-
-            switch (clicksModulo)
-            {
-                case 0:
-                    return 0;
-                case 1:
-                    return 1;
-                case 2:
-                    return 0;
-                case 3:
-                    return -1;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(clicks));
             }
         }
     }
