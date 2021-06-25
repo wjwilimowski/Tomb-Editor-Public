@@ -16,31 +16,31 @@ namespace TombLib.LevelData
             Room = initialObject.Room;
             Position = initialObject.Position;
 
-            _objectInstances.Add(initialObject);
+            ObjectInstances.Add(initialObject);
         }
 
-        private readonly HashSet<ItemInstance> _objectInstances = new HashSet<ItemInstance>();
+        public HashSet<ItemInstance> ObjectInstances = new HashSet<ItemInstance>();
 
-        public void Add(ItemInstance objectInstance) => _objectInstances.Add(objectInstance);
-        public void Remove(ItemInstance objectInstance) => _objectInstances.Remove(objectInstance);
-        public bool Contains(ItemInstance obInstance) => _objectInstances.Contains(obInstance);
-        public bool Any() => _objectInstances.Any();
+        public void Add(ItemInstance objectInstance) => ObjectInstances.Add(objectInstance);
+        public void Remove(ItemInstance objectInstance) => ObjectInstances.Remove(objectInstance);
+        public bool Contains(ItemInstance obInstance) => ObjectInstances.Contains(obInstance);
+        public bool Any() => ObjectInstances.Any();
 
         public override void SetPosition(Vector3 position)
         {
             var difference = position - Position;
             base.SetPosition(position);
 
-            foreach (var i in _objectInstances)
+            foreach (var i in ObjectInstances)
                 i.SetPosition(i.Position + difference);
         }
 
-        public List<ObjectInstance> ToObjectInstances() => _objectInstances.OfType<ObjectInstance>().ToList();
+        public List<ObjectInstance> ToObjectInstances() => ObjectInstances.OfType<ObjectInstance>().ToList();
 
         public override void Transform(RectTransformation transformation, VectorInt2 oldRoomSize)
         {
             base.Transform(transformation, oldRoomSize);
-            foreach (var oi in _objectInstances)
+            foreach (var oi in ObjectInstances)
                 oi.Transform(transformation, oldRoomSize);
         }
 
@@ -55,7 +55,7 @@ namespace TombLib.LevelData
 
                 _rotationY = value;
 
-                foreach (var i in _objectInstances)
+                foreach (var i in ObjectInstances)
                     i.RotationY += difference;
             }
         }
@@ -74,7 +74,7 @@ namespace TombLib.LevelData
             var sin = SinClicks(-clicks);
             var cos = SinClicks(-clicks - 1);
 
-            foreach (var i in _objectInstances)
+            foreach (var i in ObjectInstances)
             {
                 var distance = i.Position - Position;
                 if (distance.X != 0.0f || distance.Z != 0.0f)
@@ -99,7 +99,7 @@ namespace TombLib.LevelData
             var sin = (float)Math.Sin(-rotationToApplyRad);
             var cos = (float)Math.Cos(-rotationToApplyRad);
 
-            foreach (var i in _objectInstances)
+            foreach (var i in ObjectInstances)
             {
                 var distance = i.Position - Position;
                 if (distance.X != 0.0f || distance.Z != 0.0f)

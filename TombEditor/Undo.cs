@@ -141,6 +141,7 @@ namespace TombEditor
         private float? RotationY = null;
         private float? RotationX = null;
         private float? Roll = null;
+        private Dictionary<int, Vector3> _childPositions;
 
         public TransformObjectUndoInstance(EditorUndoManager parent, PositionBasedObjectInstance obj) : base(parent, obj.Room)
         {
@@ -152,6 +153,8 @@ namespace TombEditor
             if (obj is IRotateableY) RotationY = ((IRotateableY)obj).RotationY;
             if (obj is IRotateableYX) RotationX = ((IRotateableYX)obj).RotationX;
             if (obj is IRotateableYXRoll) Roll = ((IRotateableYXRoll)obj).Roll;
+            if (obj is ObjectGroup og)
+                _childPositions = og.ObjectInstances.ToDictionary(i => i.GetHashCode(), i => i.Position);
 
             Valid = () => UndoObject != null && UndoObject.Room != null && Room.ExistsInLevel;
 
@@ -177,6 +180,16 @@ namespace TombEditor
                 if (UndoObject is IRotateableY && RotationY.HasValue) ((IRotateableY)obj).RotationY = RotationY.Value;
                 if (UndoObject is IRotateableYX && RotationX.HasValue) ((IRotateableYX)obj).RotationX = RotationX.Value;
                 if (UndoObject is IRotateableYXRoll && Roll.HasValue) ((IRotateableYXRoll)obj).Roll = Roll.Value;
+                if (UndoObject is ObjectGroup grp && _childPositions != null)
+                {
+                    foreach (var child in grp.ObjectInstances)
+                    {
+                        if (_childPositions.TryGetValue(child.GetHashCode(), out var position))
+                        {
+                            child.Position = position;
+                        }
+                    }
+                }
 
                 if (UndoObject is LightInstance)
                     Room.BuildGeometry(); // Rebuild lighting!
