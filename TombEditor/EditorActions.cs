@@ -819,10 +819,13 @@ namespace TombEditor
             switch (axis)
             {
                 case RotationAxis.Y:
-                    var rotateableY = instance as IRotateableY;
-                    if (rotateableY == null)
+                    if (Control.ModifierKeys.HasFlag(Keys.Alt) && instance is ObjectGroup og)
+                        og.RotateToDeg(angleInDegrees + (delta ? og.RotationY : 0));
+                    else if (instance is IRotateableY rotateableY)
+                        rotateableY.RotationY = angleInDegrees + (delta ? rotateableY.RotationY : 0);
+                    else
                         return;
-                    rotateableY.RotationY = angleInDegrees + (delta ? rotateableY.RotationY : 0);
+
                     break;
                 case RotationAxis.X:
                     var rotateableX = instance as IRotateableYX;

@@ -88,6 +88,31 @@ namespace TombLib.LevelData
             }
         }
 
+        public void RotateToDeg(float targetDeg)
+        {
+            var rotationToApply = targetDeg - RotationY;
+
+            RotationY += rotationToApply;
+
+            var rotationToApplyRad = rotationToApply * Math.PI / 180.0f;
+            // The formula used goes counterclockwise - using negative clicks to go clockwise
+            var sin = (float)Math.Sin(-rotationToApplyRad);
+            var cos = (float)Math.Cos(-rotationToApplyRad);
+
+            foreach (var i in _objectInstances)
+            {
+                var distance = i.Position - Position;
+                if (distance.X != 0.0f || distance.Z != 0.0f)
+                {
+                    i.SetPosition(new Vector3(
+                        distance.X * cos - distance.Z * sin + Position.X,
+                        i.Position.Y,
+                        distance.X * sin + distance.Z * cos + Position.Z
+                    ));
+                }
+            }
+        }
+
         // Get sine of the angle clicks * 90deg
         private int SinClicks(int clicks)
         {
