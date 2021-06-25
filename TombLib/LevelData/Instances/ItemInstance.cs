@@ -15,7 +15,6 @@ namespace TombLib.LevelData
             get { return _rotation; }
             set { _rotation = (float)(value - Math.Floor(value / 360.0) * 360.0); }
         }
-
         /// <summary> Rotation in radians in the interval [0, 2*Pi). The value is range reduced. </summary>
         public float RotationYRadians
         {

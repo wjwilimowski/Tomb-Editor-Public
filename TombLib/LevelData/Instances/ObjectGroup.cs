@@ -16,31 +16,31 @@ namespace TombLib.LevelData
             Room = initialObject.Room;
             Position = initialObject.Position;
 
-            ObjectInstances.Add(initialObject);
+            Objects.Add(initialObject);
         }
 
-        public HashSet<ItemInstance> ObjectInstances = new HashSet<ItemInstance>();
+        public HashSet<ItemInstance> Objects { get; } = new HashSet<ItemInstance>();
 
-        public void Add(ItemInstance objectInstance) => ObjectInstances.Add(objectInstance);
-        public void Remove(ItemInstance objectInstance) => ObjectInstances.Remove(objectInstance);
-        public bool Contains(ItemInstance obInstance) => ObjectInstances.Contains(obInstance);
-        public bool Any() => ObjectInstances.Any();
+        public void Add(ItemInstance objectInstance) => Objects.Add(objectInstance);
+        public void Remove(ItemInstance objectInstance) => Objects.Remove(objectInstance);
+        public bool Contains(ItemInstance obInstance) => Objects.Contains(obInstance);
+        public bool Any() => Objects.Any();
+        public List<ObjectInstance> ToObjectInstances() => Objects.OfType<ObjectInstance>().ToList();
 
         public override void SetPosition(Vector3 position)
         {
             var difference = position - Position;
             base.SetPosition(position);
 
-            foreach (var i in ObjectInstances)
+            foreach (var i in Objects)
                 i.SetPosition(i.Position + difference);
         }
 
-        public List<ObjectInstance> ToObjectInstances() => ObjectInstances.OfType<ObjectInstance>().ToList();
 
         public override void Transform(RectTransformation transformation, VectorInt2 oldRoomSize)
         {
             base.Transform(transformation, oldRoomSize);
-            foreach (var oi in ObjectInstances)
+            foreach (var oi in Objects)
                 oi.Transform(transformation, oldRoomSize);
         }
 
@@ -55,33 +55,30 @@ namespace TombLib.LevelData
 
                 _rotationY = value;
 
-                foreach (var i in ObjectInstances)
+                foreach (var i in Objects)
                     i.RotationY += difference;
             }
         }
 
-        public void RotateToDeg(float targetDeg)
+        public void RotateAsGroup(float targetRotationDeg)
         {
-            var rotationToApply = targetDeg - RotationY;
+            RotationY = targetRotationDeg;
 
-            RotationY += rotationToApply;
+            var rotationDifferenceRad = (targetRotationDeg - RotationY) * Math.PI / 180.0f;
 
-            var rotationToApplyRad = rotationToApply * Math.PI / 180.0f;
-            // The formula used goes counterclockwise - using negative clicks to go clockwise
-            var sin = (float)Math.Sin(-rotationToApplyRad);
-            var cos = (float)Math.Cos(-rotationToApplyRad);
+            // The formula used goes counterclockwise - using negative angle to go clockwise
+            var sin = (float)Math.Sin(-rotationDifferenceRad);
+            var cos = (float)Math.Cos(-rotationDifferenceRad);
 
-            foreach (var i in ObjectInstances)
+            foreach (var i in Objects)
             {
                 var distance = i.Position - Position;
-                if (distance.X != 0.0f || distance.Z != 0.0f)
-                {
-                    i.SetPosition(new Vector3(
-                        distance.X * cos - distance.Z * sin + Position.X,
-                        i.Position.Y,
-                        distance.X * sin + distance.Z * cos + Position.Z
-                    ));
-                }
+
+                i.SetPosition(new Vector3(
+                    distance.X * cos - distance.Z * sin + Position.X,
+                    i.Position.Y,
+                    distance.X * sin + distance.Z * cos + Position.Z
+                ));
             }
         }
     }
