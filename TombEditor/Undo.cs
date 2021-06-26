@@ -83,12 +83,17 @@ namespace TombEditor
     public class AddRemoveObjectUndoInstance : EditorUndoRedoInstance
     {
         private PositionBasedObjectInstance UndoObject;
+        private IReadOnlyList<ItemInstance> Children;
         private bool Created;
 
         public AddRemoveObjectUndoInstance(EditorUndoManager parent, PositionBasedObjectInstance obj, bool created) : base(parent, obj.Room)
         {
             Created = created;
             UndoObject = obj;
+            if (obj is ObjectGroup og)
+            {
+                Children = og.Objects.ToList();
+            }
 
             Valid = () =>
             {
@@ -114,6 +119,14 @@ namespace TombEditor
                     EditorActions.DeleteObjectWithoutUpdate(UndoObject);
                 else
                 {
+                    if (UndoObject is ObjectGroup grp)
+                    {
+                        foreach (var child in Children)
+                        {
+                            grp.Add(child);   
+                        }
+                    }
+
                     var backupPos = obj.Position; // Preserve original position and reassign it after placement
                     EditorActions.PlaceObjectWithoutUpdate(Room, obj.SectorPosition, UndoObject);
                     EditorActions.MoveObject(UndoObject, backupPos);
