@@ -155,7 +155,7 @@ namespace TombEditor
             if (obj is IRotateableYXRoll) Roll = ((IRotateableYXRoll)obj).Roll;
             if (obj is ObjectGroup og)
             {
-                _groupedObjectPositions = og.ObjectInstances
+                _groupedObjectPositions = og.Objects
                     .ToDictionary(
                         i => i.GetHashCode(),
                         i => i.Position
@@ -188,11 +188,11 @@ namespace TombEditor
                 if (UndoObject is IRotateableYXRoll && Roll.HasValue) ((IRotateableYXRoll)obj).Roll = Roll.Value;
                 if (UndoObject is ObjectGroup grp && _groupedObjectPositions != null)
                 {
-                    foreach (var child in grp.ObjectInstances)
+                    foreach (var groupedObject in grp.Objects)
                     {
-                        if (_groupedObjectPositions.TryGetValue(child.GetHashCode(), out var position))
+                        if (_groupedObjectPositions.TryGetValue(groupedObject.GetHashCode(), out var position))
                         {
-                            child.Position = position;
+                            groupedObject.Position = position;
                         }
                     }
                 }

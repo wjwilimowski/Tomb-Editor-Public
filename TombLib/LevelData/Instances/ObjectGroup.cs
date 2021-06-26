@@ -19,6 +19,19 @@ namespace TombLib.LevelData
             Objects.Add(initialObject);
         }
 
+        public ObjectGroup(IReadOnlyList<ItemInstance> objects)
+        {
+            var initialObject = objects.First();
+
+            Room = initialObject.Room;
+            Position = initialObject.Position;
+
+            foreach (var obj in objects)
+            {
+                Objects.Add(obj);
+            }
+        }
+
         public HashSet<ItemInstance> Objects { get; } = new HashSet<ItemInstance>();
 
         public void Add(ItemInstance objectInstance) => Objects.Add(objectInstance);

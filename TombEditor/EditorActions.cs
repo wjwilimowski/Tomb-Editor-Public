@@ -820,7 +820,7 @@ namespace TombEditor
             {
                 case RotationAxis.Y:
                     if (Control.ModifierKeys.HasFlag(Keys.Alt) && instance is ObjectGroup og)
-                        og.RotateToDeg(angleInDegrees + (delta ? og.RotationY : 0));
+                        og.RotateAsGroup(angleInDegrees + (delta ? og.RotationY : 0));
                     else if (instance is IRotateableY rotateableY)
                         rotateableY.RotationY = angleInDegrees + (delta ? rotateableY.RotationY : 0);
                     else
@@ -953,7 +953,7 @@ namespace TombEditor
             else
             {
                 ObjectInstance instance = data.MergeGetSingleObject(_editor);
-
+                
                 if (instance is ISpatial)
                 {
                     // HACK: fix imported geometry reference
@@ -1860,17 +1860,30 @@ namespace TombEditor
             if (!(instance is ISpatial))
                 return;
 
-            if (instance is PositionBasedObjectInstance)
+            if (instance is ObjectGroup og)
             {
-                var posInstance = (PositionBasedObjectInstance)instance;
+                var combinedPosition = new Vector3(pos.X * 1024 + 512, og.Position.Y, pos.Y * 1024 + 512 /*Z*/);
+                og.SetPosition(combinedPosition);
 
+                foreach (var obj in og.Objects)
+                {
+                    room.AddObject(_editor.Level, obj);
+                    _editor.ObjectChange(obj, ObjectChangeType.Add);
+                    _editor.UndoManager.PushObjectCreated(obj);
+                    AllocateScriptIds(obj);
+                }
+
+                // Hack - pasted ObjectGroup could have null Room, setting _editor.SelectedObject to an object with no room throws an exception. This ensures the room is initialized
+                _editor.SelectedObject = new ObjectGroup(og.Objects.ToList());
+            }
+            else if (instance is PositionBasedObjectInstance posInstance)
+            {
                 PlaceObjectWithoutUpdate(room, pos, posInstance);
                 _editor.UndoManager.PushObjectCreated(posInstance);
                 AllocateScriptIds(posInstance);
             }
-            else if (instance is GhostBlockInstance)
+            else if (instance is GhostBlockInstance ghost)
             {
-                var ghost = (GhostBlockInstance)instance;
                 if (PlaceGhostBlockWithoutUpdate(room, pos, ghost))
                     _editor.UndoManager.PushGhostBlockCreated(ghost);
                 else
