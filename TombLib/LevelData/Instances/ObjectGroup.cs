@@ -32,6 +32,12 @@ namespace TombLib.LevelData
             }
         }
 
+        public ObjectGroup SetRoom(Room room)
+        {
+            Room = room;
+            return this;
+        }
+
         public HashSet<ItemInstance> Objects { get; } = new HashSet<ItemInstance>();
 
         public void Add(ItemInstance objectInstance) => Objects.Add(objectInstance);

@@ -1862,22 +1862,13 @@ namespace TombEditor
 
             if (instance is ObjectGroup og)
             {
-                Block block = room.GetBlock(pos);
-                int y = (block.Floor.XnZp + block.Floor.XpZp + block.Floor.XpZn + block.Floor.XnZn) / 4;
-
-                var combinedPosition = new Vector3(pos.X * 1024 + 512, y * 256, pos.Y * 1024 + 512 /*Z*/);
-                og.SetPosition(combinedPosition);
+                PlaceObjectWithoutUpdate(room, pos, og);
 
                 foreach (var obj in og.Objects)
                 {
-                    room.AddObject(_editor.Level, obj);
-                    _editor.ObjectChange(obj, ObjectChangeType.Add);
                     _editor.UndoManager.PushObjectCreated(obj);
                     AllocateScriptIds(obj);
                 }
-
-                // Hack - pasted ObjectGroup could have null Room, setting _editor.SelectedObject to an object with no room throws an exception. This ensures the room is initialized
-                _editor.SelectedObject = new ObjectGroup(og.Objects.ToList());
             }
             else if (instance is PositionBasedObjectInstance posInstance)
             {
@@ -1899,7 +1890,8 @@ namespace TombEditor
             Block block = room.GetBlock(pos);
             int y = (block.Floor.XnZp + block.Floor.XpZp + block.Floor.XpZn + block.Floor.XnZn) / 4;
 
-            instance.Position = new Vector3(pos.X * 1024 + 512, y * 256, pos.Y * 1024 + 512);
+            var placedPosition = new Vector3(pos.X * 1024 + 512, y * 256, pos.Y * 1024 + 512);
+            instance.SetPosition(placedPosition);
             room.AddObject(_editor.Level, instance);
             if (instance is LightInstance)
             {

@@ -1086,8 +1086,22 @@ namespace TombLib.LevelData
             }
 
             // Add normal object
-            AddObjectAndSingularPortal(level, instance);
-            return new[] { instance };
+            if (instance is ObjectGroup og)
+            {
+                og.SetRoom(this);
+
+                foreach (var obj in og.Objects)
+                {
+                    AddObjectAndSingularPortal(level, obj);
+                }
+
+                return og.Objects.ToArray();
+            }
+            else
+            {
+                AddObjectAndSingularPortal(level, instance);
+                return new[] { instance };
+            }
         }
 
         public IEnumerable<ObjectInstance> RemoveObjectAndKeepAlive(Level level, ObjectInstance instance)
