@@ -1862,7 +1862,10 @@ namespace TombEditor
 
             if (instance is ObjectGroup og)
             {
-                var combinedPosition = new Vector3(pos.X * 1024 + 512, og.Position.Y, pos.Y * 1024 + 512 /*Z*/);
+                Block block = room.GetBlock(pos);
+                int y = (block.Floor.XnZp + block.Floor.XpZp + block.Floor.XpZn + block.Floor.XnZn) / 4;
+
+                var combinedPosition = new Vector3(pos.X * 1024 + 512, y * 256, pos.Y * 1024 + 512 /*Z*/);
                 og.SetPosition(combinedPosition);
 
                 foreach (var obj in og.Objects)
