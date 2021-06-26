@@ -1084,8 +1084,6 @@ namespace TombLib.LevelData
                 }
                 return addedObjects;
             }
-
-            // Add normal object
             if (instance is ObjectGroup og)
             {
                 og.SetRoom(this);
@@ -1099,6 +1097,8 @@ namespace TombLib.LevelData
             }
             else
             {
+
+                // Add normal object
                 AddObjectAndSingularPortal(level, instance);
                 return new[] { instance };
             }
@@ -1106,6 +1106,11 @@ namespace TombLib.LevelData
 
         public IEnumerable<ObjectInstance> RemoveObjectAndKeepAlive(Level level, ObjectInstance instance)
         {
+            if (instance is ObjectGroup og)
+            {
+                return og.Objects.Select(obj => RemoveObjectAndSingularPortalAndKeepAlive(level, obj));
+            }
+
             List<ObjectInstance> result = new List<ObjectInstance>();
             result.Add(RemoveObjectAndSingularPortalAndKeepAlive(level, instance));
 

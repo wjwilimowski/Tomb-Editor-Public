@@ -1863,10 +1863,10 @@ namespace TombEditor
             if (instance is ObjectGroup og)
             {
                 PlaceObjectWithoutUpdate(room, pos, og);
+                _editor.UndoManager.PushObjectCreated(og);
 
                 foreach (var obj in og.Objects)
                 {
-                    _editor.UndoManager.PushObjectCreated(obj);
                     AllocateScriptIds(obj);
                 }
             }
