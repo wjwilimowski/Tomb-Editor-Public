@@ -75,9 +75,9 @@ namespace TombLib.LevelData
 
         public void RotateAsGroup(float targetRotationDeg)
         {
-            RotationY = targetRotationDeg;
-
             var rotationDifferenceRad = (targetRotationDeg - RotationY) * Math.PI / 180.0f;
+
+            RotationY = targetRotationDeg;
 
             // The formula used goes counterclockwise - using negative angle to go clockwise
             var sin = (float)Math.Sin(-rotationDifferenceRad);
@@ -87,11 +87,10 @@ namespace TombLib.LevelData
             {
                 var distance = i.Position - Position;
 
-                i.SetPosition(new Vector3(
-                    distance.X * cos - distance.Z * sin + Position.X,
-                    i.Position.Y,
-                    distance.X * sin + distance.Z * cos + Position.Z
-                ));
+                var x = distance.X * cos - distance.Z * sin + Position.X;
+                var z = distance.X * sin + distance.Z * cos + Position.Z;
+
+                i.SetPosition(new Vector3(x, i.Position.Y, z));
             }
         }
     }
