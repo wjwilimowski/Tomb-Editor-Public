@@ -99,5 +99,7 @@ namespace TombLib.LevelData
                 i.SetPosition(new Vector3(x, i.Position.Y, z));
             }
         }
+
+        public string ShortName() => $"Group of {Objects.Count} objects";
     }
 }
