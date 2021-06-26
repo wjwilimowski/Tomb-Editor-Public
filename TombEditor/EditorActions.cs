@@ -1853,6 +1853,14 @@ namespace TombEditor
             {
                 (instance as ItemInstance).LuaId = _editor.Level.AllocNewLuaId();
             }
+
+            if (instance is ObjectGroup og)
+            {
+                foreach (var obj in og.Objects)
+                {
+                    AllocateScriptIds(obj);
+                }
+            }
         }
 
         public static void PlaceObject(Room room, VectorInt2 pos, ObjectInstance instance)
@@ -1860,17 +1868,7 @@ namespace TombEditor
             if (!(instance is ISpatial))
                 return;
 
-            if (instance is ObjectGroup og)
-            {
-                PlaceObjectWithoutUpdate(room, pos, og);
-                _editor.UndoManager.PushObjectCreated(og);
-
-                foreach (var obj in og.Objects)
-                {
-                    AllocateScriptIds(obj);
-                }
-            }
-            else if (instance is PositionBasedObjectInstance posInstance)
+            if (instance is PositionBasedObjectInstance posInstance)
             {
                 PlaceObjectWithoutUpdate(room, pos, posInstance);
                 _editor.UndoManager.PushObjectCreated(posInstance);
