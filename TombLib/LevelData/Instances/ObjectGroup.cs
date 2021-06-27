@@ -85,7 +85,6 @@ namespace TombLib.LevelData
 
             RotationY = targetRotationDeg;
 
-            // The formula used goes counterclockwise - using negative angle to go clockwise
             var sin = (float)Math.Sin(-rotationDifferenceRad);
             var cos = (float)Math.Cos(-rotationDifferenceRad);
 
