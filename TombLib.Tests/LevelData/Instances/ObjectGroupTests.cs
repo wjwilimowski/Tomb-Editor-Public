@@ -29,9 +29,9 @@ namespace TombLib.Tests.LevelData.Instances
             Assert.Same(room, objectGroup.Room);
             Assert.Equal(position, objectGroup.Position);
             Assert.Equal(0f, objectGroup.RotationY);
-            Assert.Single(objectGroup.Objects);
+            Assert.Single(objectGroup);
             Assert.Collection(
-                objectGroup.Objects, 
+                objectGroup, 
                 first => Assert.Same(obj, first)
                 );
         }

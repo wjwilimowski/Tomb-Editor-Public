@@ -1088,12 +1088,9 @@ namespace TombLib.LevelData
             {
                 og.SetRoom(this);
 
-                foreach (var obj in og.Objects)
-                {
-                    AddObjectAndSingularPortal(level, obj);
-                }
-
-                return og.Objects.ToArray();
+                return og
+                    .Select(obj => AddObjectAndSingularPortal(level, obj))
+                    .ToArray();
             }
             else
             {
@@ -1108,7 +1105,7 @@ namespace TombLib.LevelData
         {
             if (instance is ObjectGroup og)
             {
-                return og.Objects.Select(obj => RemoveObjectAndSingularPortalAndKeepAlive(level, obj));
+                return og.Select(obj => RemoveObjectAndSingularPortalAndKeepAlive(level, obj));
             }
 
             List<ObjectInstance> result = new List<ObjectInstance>();

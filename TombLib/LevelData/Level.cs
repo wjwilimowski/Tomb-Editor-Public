@@ -167,7 +167,7 @@ namespace TombLib.LevelData
         {
             if (instance is ObjectGroup og)
             {
-                return og.Objects.SelectMany(DeleteTriggersForObject).Distinct().ToList();
+                return og.SelectMany(DeleteTriggersForObject).Distinct().ToList();
             }
 
             List<Room> result = new List<Room>();

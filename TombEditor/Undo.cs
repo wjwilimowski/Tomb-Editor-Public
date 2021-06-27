@@ -91,8 +91,8 @@ namespace TombEditor
             Created = created;
             UndoObject = obj;
             if (obj is ObjectGroup og)
-            {
-                Children = og.Objects.ToList();
+            { // need to make a copy because removing ObjectGroup removes children from it first
+                Children = og.ToList();
             }
 
             Valid = () =>
@@ -168,7 +168,7 @@ namespace TombEditor
             if (obj is IRotateableYXRoll) Roll = ((IRotateableYXRoll)obj).Roll;
             if (obj is ObjectGroup og)
             {
-                _groupedObjectPositions = og.Objects
+                _groupedObjectPositions = og
                     .ToDictionary(
                         i => i.GetHashCode(),
                         i => i.Position
@@ -201,7 +201,7 @@ namespace TombEditor
                 if (UndoObject is IRotateableYXRoll && Roll.HasValue) ((IRotateableYXRoll)obj).Roll = Roll.Value;
                 if (UndoObject is ObjectGroup grp && _groupedObjectPositions != null)
                 {
-                    foreach (var groupedObject in grp.Objects)
+                    foreach (var groupedObject in grp)
                     {
                         if (_groupedObjectPositions.TryGetValue(groupedObject.GetHashCode(), out var position))
                         {

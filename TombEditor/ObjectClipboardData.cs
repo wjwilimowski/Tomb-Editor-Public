@@ -24,7 +24,7 @@ namespace TombEditor
                 var objectInstances = new List<ObjectInstance> { editor.SelectedObject };
                 if (editor.SelectedObject is ObjectGroup og)
                 {
-                    objectInstances.AddRange(og.Objects);
+                    objectInstances.AddRange(og);
                 }
                 Prj2Writer.SaveToPrj2OnlyObjects(stream, editor.Level, objectInstances);
                 _data = stream.GetBuffer();

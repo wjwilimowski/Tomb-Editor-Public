@@ -1856,7 +1856,7 @@ namespace TombEditor
 
             if (instance is ObjectGroup og)
             {
-                foreach (var obj in og.Objects)
+                foreach (var obj in og)
                 {
                     AllocateScriptIds(obj);
                 }
