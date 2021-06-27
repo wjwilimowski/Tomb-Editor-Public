@@ -12,6 +12,8 @@ namespace TombLib.LevelData
     /// </summary>
     public class ObjectGroup : PositionBasedObjectInstance, IRotateableY, IEnumerable<ItemInstance>
     {
+        private readonly HashSet<ItemInstance> _objects = new HashSet<ItemInstance>();
+
         public ObjectGroup(ItemInstance initialObject)
         {
             Room = initialObject.Room;
@@ -33,14 +35,6 @@ namespace TombLib.LevelData
             }
         }
 
-        public ObjectGroup SetRoom(Room room)
-        {
-            Room = room;
-            return this;
-        }
-
-        private readonly HashSet<ItemInstance> _objects = new HashSet<ItemInstance>();
-
         public void Add(ItemInstance objectInstance) => _objects.Add(objectInstance);
         public void Remove(ItemInstance objectInstance) => _objects.Remove(objectInstance);
         public bool Contains(ItemInstance obInstance) => _objects.Contains(obInstance);
@@ -53,14 +47,6 @@ namespace TombLib.LevelData
 
             foreach (var i in _objects)
                 i.SetPosition(i.Position + difference);
-        }
-
-
-        public override void Transform(RectTransformation transformation, VectorInt2 oldRoomSize)
-        {
-            base.Transform(transformation, oldRoomSize);
-            foreach (var oi in _objects)
-                oi.Transform(transformation, oldRoomSize);
         }
 
         private float _rotationY;
@@ -97,6 +83,12 @@ namespace TombLib.LevelData
 
                 i.SetPosition(new Vector3(x, i.Position.Y, z));
             }
+        }
+
+        public ObjectGroup SetRoom(Room room)
+        {
+            Room = room;
+            return this;
         }
 
         public string ShortName() => $"Group of {_objects.Count} objects";
