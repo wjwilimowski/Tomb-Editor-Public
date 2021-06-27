@@ -1015,7 +1015,10 @@ namespace TombEditor
 
         public static void DeleteObject(ObjectInstance instance, IWin32Window owner = null)
         {
-            var objectsToDelete = instance is ObjectGroup og ? og.ToObjectInstances() : new List<ObjectInstance>() { instance };
+            var objectsToDelete = instance is ObjectGroup og
+                ? og.OfType<ObjectInstance>().ToList()
+                : new List<ObjectInstance> { instance };
+
             DeleteObjects(objectsToDelete, owner);
         }
 

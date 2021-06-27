@@ -45,7 +45,6 @@ namespace TombLib.LevelData
         public void Remove(ItemInstance objectInstance) => _objects.Remove(objectInstance);
         public bool Contains(ItemInstance obInstance) => _objects.Contains(obInstance);
         public bool Any() => _objects.Any();
-        public List<ObjectInstance> ToObjectInstances() => _objects.OfType<ObjectInstance>().ToList();
 
         public override void SetPosition(Vector3 position)
         {
