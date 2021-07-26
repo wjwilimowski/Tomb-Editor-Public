@@ -53,7 +53,10 @@ namespace TombLib.LevelData
 
         public float RotationY
         {
-            get => _rotationY;
+            get
+            {
+                return _rotationY;
+            }
             set
             {
                 var difference = value - _rotationY;
