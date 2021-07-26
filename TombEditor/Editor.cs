@@ -612,9 +612,9 @@ namespace TombEditor
             if (room == null || @object == null)
                 throw new ArgumentNullException();
 
-            if (@object is ObjectGroup objectGroup)
+            if (@object is ObjectGroup)
             {
-                foreach (var o in objectGroup)
+                foreach (var o in (ObjectGroup)@object)
                 {
                     RaiseEvent(new ObjectChangedEvent { Room = room, Object = o, ChangeType = changeType });
                 }
@@ -990,13 +990,18 @@ namespace TombEditor
                 {
                     SelectedObject = null;
                 }
-                else if (SelectedObject is ObjectGroup og && removedObject is ItemInstance item)
+                else
                 {
-                    og.Remove(item);
-
-                    if (!og.Any())
+                    var og = SelectedObject as ObjectGroup;
+                    var item = removedObject as ItemInstance;
+                    if (og != null && item != null)
                     {
-                        SelectedObject = null;
+                        og.Remove(item);
+
+                        if (!og.Any())
+                        {
+                            SelectedObject = null;
+                        }
                     }
                 }
             }

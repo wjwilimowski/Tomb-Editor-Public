@@ -22,8 +22,9 @@ namespace TombEditor
             {
                 var writer = new BinaryWriterEx(stream);
                 var objectInstances = new List<ObjectInstance> { editor.SelectedObject };
-                if (editor.SelectedObject is ObjectGroup og)
+                if (editor.SelectedObject is ObjectGroup)
                 {
+                    var og = (ObjectGroup)editor.SelectedObject;
                     objectInstances.AddRange(og);
                 }
                 Prj2Writer.SaveToPrj2OnlyObjects(stream, editor.Level, objectInstances);

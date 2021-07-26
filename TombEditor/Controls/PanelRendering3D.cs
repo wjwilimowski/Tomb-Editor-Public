@@ -800,13 +800,14 @@ namespace TombEditor.Controls
                         var selectedItemInstance = _editor.SelectedObject as ItemInstance;
                         var selectedObjectGroup = _editor.SelectedObject as ObjectGroup;
 
+                        var itemInstance = obj as ItemInstance;
                         if (ModifierKeys.HasFlag(Keys.Control) &&
-                            obj is ItemInstance item &&
+                            itemInstance != null &&
                             (selectedItemInstance != null || selectedObjectGroup != null))
                         {
                             var objectGroup = selectedObjectGroup ?? new ObjectGroup(selectedItemInstance);
 
-                            objectGroup.Add(item);
+                            objectGroup.Add(itemInstance);
 
                             _editor.SelectedObject = objectGroup;
                         }

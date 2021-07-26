@@ -90,9 +90,9 @@ namespace TombEditor
         {
             Created = created;
             UndoObject = obj;
-            if (obj is ObjectGroup og)
+            if (obj is ObjectGroup)
             { // need to make a copy because removing ObjectGroup removes children from it first
-                Children = og.ToList();
+                Children = ((ObjectGroup)obj).ToList();
             }
 
             Valid = () =>
@@ -119,8 +119,10 @@ namespace TombEditor
                     EditorActions.DeleteObjectWithoutUpdate(UndoObject);
                 else
                 {
-                    if (UndoObject is ObjectGroup grp)
+                    if (UndoObject is ObjectGroup)
                     {
+                        var grp = (ObjectGroup)UndoObject;
+
                         foreach (var child in Children)
                         {
                             grp.Add(child);   
@@ -166,8 +168,11 @@ namespace TombEditor
             if (obj is IRotateableY) RotationY = ((IRotateableY)obj).RotationY;
             if (obj is IRotateableYX) RotationX = ((IRotateableYX)obj).RotationX;
             if (obj is IRotateableYXRoll) Roll = ((IRotateableYXRoll)obj).Roll;
-            if (obj is ObjectGroup og)
+
+            if (obj is ObjectGroup)
             {
+                var og = (ObjectGroup)obj;
+
                 _groupedObjectPositions = og
                     .ToDictionary(
                         i => i.GetHashCode(),
@@ -199,11 +204,13 @@ namespace TombEditor
                 if (UndoObject is IRotateableY && RotationY.HasValue) ((IRotateableY)obj).RotationY = RotationY.Value;
                 if (UndoObject is IRotateableYX && RotationX.HasValue) ((IRotateableYX)obj).RotationX = RotationX.Value;
                 if (UndoObject is IRotateableYXRoll && Roll.HasValue) ((IRotateableYXRoll)obj).Roll = Roll.Value;
-                if (UndoObject is ObjectGroup grp && _groupedObjectPositions != null)
+
+                if (UndoObject is ObjectGroup && _groupedObjectPositions != null)
                 {
-                    foreach (var groupedObject in grp)
+                    foreach (var groupedObject in (ObjectGroup)UndoObject)
                     {
-                        if (_groupedObjectPositions.TryGetValue(groupedObject.GetHashCode(), out var position))
+                        Vector3 position;
+                        if (_groupedObjectPositions.TryGetValue(groupedObject.GetHashCode(), out position))
                         {
                             groupedObject.Position = position;
                         }

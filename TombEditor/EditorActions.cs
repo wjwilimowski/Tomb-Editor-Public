@@ -819,12 +819,19 @@ namespace TombEditor
             switch (axis)
             {
                 case RotationAxis.Y:
-                    if (Control.ModifierKeys.HasFlag(Keys.Alt) && instance is ObjectGroup og)
+                    if (Control.ModifierKeys.HasFlag(Keys.Alt) && instance is ObjectGroup)
+                    {
+                        var og = (ObjectGroup)instance;
                         og.RotateAsGroup(angleInDegrees + (delta ? og.RotationY : 0));
-                    else if (instance is IRotateableY rotateableY)
-                        rotateableY.RotationY = angleInDegrees + (delta ? rotateableY.RotationY : 0);
+                    }
                     else
-                        return;
+                    {
+                        var rotateableY = instance as IRotateableY;
+                        if (rotateableY != null)
+                            rotateableY.RotationY = angleInDegrees + (delta ? rotateableY.RotationY : 0);
+                        else
+                            return;
+                    }
 
                     break;
                 case RotationAxis.X:
@@ -1015,7 +1022,8 @@ namespace TombEditor
 
         public static void DeleteObject(ObjectInstance instance, IWin32Window owner = null)
         {
-            var objectsToDelete = instance is ObjectGroup og
+            var og = instance as ObjectGroup;
+            var objectsToDelete = og != null
                 ? og.OfType<ObjectInstance>().ToList()
                 : new List<ObjectInstance> { instance };
 
@@ -1857,9 +1865,9 @@ namespace TombEditor
                 (instance as ItemInstance).LuaId = _editor.Level.AllocNewLuaId();
             }
 
-            if (instance is ObjectGroup og)
+            if (instance is ObjectGroup)
             {
-                foreach (var obj in og)
+                foreach (var obj in (ObjectGroup)instance)
                 {
                     AllocateScriptIds(obj);
                 }
@@ -1871,14 +1879,16 @@ namespace TombEditor
             if (!(instance is ISpatial))
                 return;
 
-            if (instance is PositionBasedObjectInstance posInstance)
+            if (instance is PositionBasedObjectInstance)
             {
+                var posInstance = (PositionBasedObjectInstance)instance;
                 PlaceObjectWithoutUpdate(room, pos, posInstance);
                 _editor.UndoManager.PushObjectCreated(posInstance);
                 AllocateScriptIds(posInstance);
             }
-            else if (instance is GhostBlockInstance ghost)
+            else if (instance is GhostBlockInstance)
             {
+                var ghost = (GhostBlockInstance)instance;
                 if (PlaceGhostBlockWithoutUpdate(room, pos, ghost))
                     _editor.UndoManager.PushGhostBlockCreated(ghost);
                 else
