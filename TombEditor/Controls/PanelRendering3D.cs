@@ -3519,7 +3519,7 @@ namespace TombEditor.Controls
                 // Add text message
                 textToDraw.Add(CreateTextTagForObject(
                     activeObjectGroup.RotationPositionMatrix * viewProjection,
-                    $"Object group of {activeObjectGroup.Count()} objects" +
+                    $"Group of {activeObjectGroup.Count()} objects" +
                     "\n" + GetObjectPositionString(activeObjectGroup.Room, activeObjectGroup)));
             }
 
