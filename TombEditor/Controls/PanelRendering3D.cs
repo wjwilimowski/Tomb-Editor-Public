@@ -1937,21 +1937,23 @@ namespace TombEditor.Controls
                 {
                     effect.Parameters["ModelViewProjection"].SetValue((light.ObjectMatrix * viewProjection).ToSharpDX());
 
-                    if (light.Type == LightType.Point)
-                        effect.Parameters["Color"].SetValue(new Vector4(1.0f, 1.0f, 0.25f, 1.0f));
-                    if (light.Type == LightType.Spot)
-                        effect.Parameters["Color"].SetValue(new Vector4(1.0f, 1.0f, 0.25f, 1.0f));
-                    if (light.Type == LightType.FogBulb)
-                        effect.Parameters["Color"].SetValue(new Vector4(1.0f, 0.0f, 1.0f, 1.0f));
-                    if (light.Type == LightType.Shadow)
-                        effect.Parameters["Color"].SetValue(new Vector4(0.5f, 0.5f, 0.5f, 1.0f));
-                    if (light.Type == LightType.Effect)
-                        effect.Parameters["Color"].SetValue(new Vector4(1.0f, 1.0f, 0.25f, 1.0f));
-                    if (light.Type == LightType.Sun)
-                        effect.Parameters["Color"].SetValue(new Vector4(1.0f, 0.5f, 0.0f, 1.0f));
-
                     if (isSelected(light))
                         effect.Parameters["Color"].SetValue(_editor.Configuration.UI_ColorScheme.ColorSelection);
+                    else
+                    {
+                        if (light.Type == LightType.Point)
+                            effect.Parameters["Color"].SetValue(new Vector4(1.0f, 1.0f, 0.25f, 1.0f));
+                        if (light.Type == LightType.Spot)
+                            effect.Parameters["Color"].SetValue(new Vector4(1.0f, 1.0f, 0.25f, 1.0f));
+                        if (light.Type == LightType.FogBulb)
+                            effect.Parameters["Color"].SetValue(new Vector4(1.0f, 0.0f, 1.0f, 1.0f));
+                        if (light.Type == LightType.Shadow)
+                            effect.Parameters["Color"].SetValue(new Vector4(0.5f, 0.5f, 0.5f, 1.0f));
+                        if (light.Type == LightType.Effect)
+                            effect.Parameters["Color"].SetValue(new Vector4(1.0f, 1.0f, 0.25f, 1.0f));
+                        if (light.Type == LightType.Sun)
+                            effect.Parameters["Color"].SetValue(new Vector4(1.0f, 0.5f, 0.0f, 1.0f));
+                    }
 
                     effect.CurrentTechnique.Passes[0].Apply();
                     _legacyDevice.DrawIndexed(PrimitiveType.TriangleList, _littleSphere.IndexBuffer.ElementCount);
