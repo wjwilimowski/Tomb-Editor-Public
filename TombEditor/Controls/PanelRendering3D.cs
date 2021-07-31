@@ -1922,6 +1922,11 @@ namespace TombEditor.Controls
 
         private void DrawLights(Matrix4x4 viewProjection, Effect effect, Room[] roomsWhoseObjectsToDraw, List<Text> textToDraw)
         {
+            var activeObjectGroup = _editor.SelectedObject as ObjectGroup;
+            var isSelected = activeObjectGroup != null
+                ? (Func<LightInstance, bool>)(light => activeObjectGroup.Contains(light))
+                : eff => eff == _editor.SelectedObject;
+
             _legacyDevice.SetRasterizerState(_rasterizerWireframe);
             _legacyDevice.SetVertexBuffer(_littleSphere.VertexBuffer);
             _legacyDevice.SetVertexInputLayout(VertexInputLayout.FromBuffer(0, _littleSphere.VertexBuffer));
@@ -1945,7 +1950,7 @@ namespace TombEditor.Controls
                     if (light.Type == LightType.Sun)
                         effect.Parameters["Color"].SetValue(new Vector4(1.0f, 0.5f, 0.0f, 1.0f));
 
-                    if (_editor.SelectedObject == light)
+                    if (isSelected(light))
                         effect.Parameters["Color"].SetValue(_editor.Configuration.UI_ColorScheme.ColorSelection);
 
                     effect.CurrentTechnique.Passes[0].Apply();
