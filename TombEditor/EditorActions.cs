@@ -964,9 +964,15 @@ namespace TombEditor
                 if (instance is ISpatial)
                 {
                     // HACK: fix imported geometry reference
+                    var importedGeometries = new List<ImportedGeometryInstance>();
+
                     if (instance is ImportedGeometryInstance)
+                        importedGeometries.Add(instance as ImportedGeometryInstance);
+                    else if (instance is ObjectGroup)
+                        importedGeometries.AddRange((instance as ObjectGroup).OfType<ImportedGeometryInstance>());
+
+                    foreach(var imported in importedGeometries)
                     {
-                        var imported = instance as ImportedGeometryInstance;
                         var pastedPath = _editor.Level.Settings.MakeAbsolute(imported.Model.Info.Path);
                         foreach (var model in _editor.Level.Settings.ImportedGeometries)
                         {
