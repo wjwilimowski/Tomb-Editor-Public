@@ -3513,6 +3513,16 @@ namespace TombEditor.Controls
                 String = DebugString
             });
 
+            var activeObjectGroup = _editor.SelectedObject as ObjectGroup;
+            if (activeObjectGroup != null)
+            {
+                // Add text message
+                textToDraw.Add(CreateTextTagForObject(
+                    activeObjectGroup.RotationPositionMatrix * viewProjection,
+                    $"Object group of {activeObjectGroup.Count()} objects" +
+                    "\n" + GetObjectPositionString(activeObjectGroup.Room, activeObjectGroup)));
+            }
+
             // Finish strings
             SwapChain.RenderText(textToDraw);
         }
