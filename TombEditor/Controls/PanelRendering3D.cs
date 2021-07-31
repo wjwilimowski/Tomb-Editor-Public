@@ -2642,7 +2642,7 @@ namespace TombEditor.Controls
                         _legacyDevice.SetRasterizerState(_legacyDevice.RasterizerStates.CullBack);
 
                         Vector4 color = new Vector4(0.4f, 0.4f, 1.0f, 1.0f);
-                        if (isSelected(instance)) // TODO
+                        if (isSelected(instance))
                         {
                             color = _editor.Configuration.UI_ColorScheme.ColorSelection;
                             _legacyDevice.SetRasterizerState(_rasterizerWireframe);
