@@ -83,7 +83,7 @@ namespace TombEditor
     public class AddRemoveObjectUndoInstance : EditorUndoRedoInstance
     {
         private PositionBasedObjectInstance UndoObject;
-        private IReadOnlyList<ItemInstance> Children;
+        private IReadOnlyList<PositionBasedObjectInstance> Children;
         private bool Created;
 
         public AddRemoveObjectUndoInstance(EditorUndoManager parent, PositionBasedObjectInstance obj, bool created) : base(parent, obj.Room)

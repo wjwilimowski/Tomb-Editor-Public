@@ -797,10 +797,10 @@ namespace TombEditor.Controls
 
                         // Select object
 
-                        var selectedItemInstance = _editor.SelectedObject as ItemInstance;
+                        var selectedItemInstance = _editor.SelectedObject as PositionBasedObjectInstance;
                         var selectedObjectGroup = _editor.SelectedObject as ObjectGroup;
 
-                        var itemInstance = obj as ItemInstance;
+                        var itemInstance = obj as PositionBasedObjectInstance;
                         if (ModifierKeys.HasFlag(Keys.Control) &&
                             itemInstance != null &&
                             (selectedItemInstance != null || selectedObjectGroup != null))

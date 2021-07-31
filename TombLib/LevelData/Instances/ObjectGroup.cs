@@ -3,18 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using TombLib.Utils;
 
 namespace TombLib.LevelData
 {
     /// <summary>
     /// Represents a group of objects multi-selected by ctrl-clicking.
     /// </summary>
-    public class ObjectGroup : PositionBasedObjectInstance, IRotateableY, IEnumerable<ItemInstance>
+    public class ObjectGroup : PositionBasedObjectInstance, IRotateableY, IEnumerable<PositionBasedObjectInstance>
     {
-        private readonly HashSet<ItemInstance> _objects = new HashSet<ItemInstance>();
+        private readonly HashSet<PositionBasedObjectInstance> _objects = new HashSet<PositionBasedObjectInstance>();
 
-        public ObjectGroup(ItemInstance initialObject)
+        public ObjectGroup(PositionBasedObjectInstance initialObject)
         {
             Room = initialObject.Room;
             Position = initialObject.Position;
@@ -22,7 +21,7 @@ namespace TombLib.LevelData
             _objects.Add(initialObject);
         }
 
-        public ObjectGroup(IReadOnlyList<ItemInstance> objects)
+        public ObjectGroup(IReadOnlyList<PositionBasedObjectInstance> objects)
         {
             var initialObject = objects.First();
 
@@ -35,9 +34,9 @@ namespace TombLib.LevelData
             }
         }
 
-        public void Add(ItemInstance objectInstance) => _objects.Add(objectInstance);
-        public void Remove(ItemInstance objectInstance) => _objects.Remove(objectInstance);
-        public bool Contains(ItemInstance obInstance) => _objects.Contains(obInstance);
+        public void Add(PositionBasedObjectInstance objectInstance) => _objects.Add(objectInstance);
+        public void Remove(PositionBasedObjectInstance objectInstance) => _objects.Remove(objectInstance);
+        public bool Contains(PositionBasedObjectInstance obInstance) => _objects.Contains(obInstance);
         public bool Any() => _objects.Any();
 
         public override void SetPosition(Vector3 position)
@@ -63,7 +62,7 @@ namespace TombLib.LevelData
 
                 _rotationY = value;
 
-                foreach (var i in _objects)
+                foreach (var i in _objects.OfType<IRotateableY>())
                     i.RotationY += difference;
             }
         }
@@ -96,7 +95,7 @@ namespace TombLib.LevelData
 
         public string ShortName() => $"Group of {_objects.Count} objects";
 
-        public IEnumerator<ItemInstance> GetEnumerator() => _objects.GetEnumerator();
+        public IEnumerator<PositionBasedObjectInstance> GetEnumerator() => _objects.GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => _objects.GetEnumerator();
     }
