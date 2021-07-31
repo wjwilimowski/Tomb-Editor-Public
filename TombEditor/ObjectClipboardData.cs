@@ -80,7 +80,7 @@ namespace TombEditor
             }
             else
             {
-                var unpackedChildren = unpackedObjects.OfType<ItemInstance>().ToList();
+                var unpackedChildren = unpackedObjects.OfType<PositionBasedObjectInstance>().ToList();
 
                 return new ObjectGroup(unpackedChildren);
             }
