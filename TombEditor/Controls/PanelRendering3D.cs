@@ -2601,16 +2601,19 @@ namespace TombEditor.Controls
                         _legacyDevice.SetRasterizerState(_legacyDevice.RasterizerStates.CullBack);
 
                         Vector4 color = new Vector4(0.4f, 0.4f, 1.0f, 1.0f);
-                        if (_editor.SelectedObject == instance) // TODO
+                        if (isSelected(instance))
                         {
                             color = _editor.Configuration.UI_ColorScheme.ColorSelection;
                             _legacyDevice.SetRasterizerState(_rasterizerWireframe);
 
-                            // Add text message
-                            textToDraw.Add(CreateTextTagForObject(
-                                instance.RotationPositionMatrix * viewProjection,
-                                instance + "\nUnavailable " + instance.ItemType +
+                            if (_editor.SelectedObject == instance)
+                            {
+                                // Add text message
+                                textToDraw.Add(CreateTextTagForObject(
+                                    instance.RotationPositionMatrix * viewProjection,
+                                    instance + "\nUnavailable " + instance.ItemType +
                                     "\n" + GetObjectPositionString(room, instance) + BuildTriggeredByMessage(instance)));
+                            }
 
                             // Add the line height of the object
                             AddObjectHeightLine(room, instance.Position);
@@ -2632,15 +2635,18 @@ namespace TombEditor.Controls
                         _legacyDevice.SetRasterizerState(_legacyDevice.RasterizerStates.CullBack);
 
                         Vector4 color = new Vector4(0.4f, 0.4f, 1.0f, 1.0f);
-                        if (_editor.SelectedObject == instance) // TODO
+                        if (isSelected(instance)) // TODO
                         {
                             color = _editor.Configuration.UI_ColorScheme.ColorSelection;
                             _legacyDevice.SetRasterizerState(_rasterizerWireframe);
 
-                            // Add text message
-                            textToDraw.Add(CreateTextTagForObject(
-                                instance.RotationPositionMatrix * viewProjection,
-                                instance + "\nUnavailable " + instance.ItemType + BuildTriggeredByMessage(instance)));
+                            if (_editor.SelectedObject == instance)
+                            {
+                                // Add text message
+                                textToDraw.Add(CreateTextTagForObject(
+                                    instance.RotationPositionMatrix * viewProjection,
+                                    instance + "\nUnavailable " + instance.ItemType + BuildTriggeredByMessage(instance)));
+                            }
 
                             // Add the line height of the object
                             AddObjectHeightLine(room, instance.Position);
@@ -2658,15 +2664,18 @@ namespace TombEditor.Controls
                         if (instance.Model?.DirectXModel == null || instance.Hidden)
                         {
                             Vector4 color = new Vector4(0.4f, 0.4f, 1.0f, 1.0f);
-                            if (_editor.SelectedObject == instance) // TODO
+                            if (isSelected(instance))
                             {
                                 color = _editor.Configuration.UI_ColorScheme.ColorSelection;
                                 _legacyDevice.SetRasterizerState(_rasterizerWireframe);
 
-                                // Add text message
-                                textToDraw.Add(CreateTextTagForObject(
-                                    instance.RotationPositionMatrix * viewProjection,
-                                    instance.ToString()));
+                                if (_editor.SelectedObject == instance)
+                                {
+                                    // Add text message
+                                    textToDraw.Add(CreateTextTagForObject(
+                                        instance.RotationPositionMatrix * viewProjection,
+                                        instance.ToString()));
+                                }
 
                                 // Add the line height of the object
                                 AddObjectHeightLine(room, instance.Position);
@@ -2889,6 +2898,11 @@ namespace TombEditor.Controls
             if (importedGeometryToDraw.Count == 0)
                 return;
 
+            var activeObjectGroup = _editor.SelectedObject as ObjectGroup;
+            var isSelected = activeObjectGroup != null
+                ? (Func<PositionBasedObjectInstance, bool>)(o => activeObjectGroup.Contains(o))
+                : o => o == _editor.SelectedObject;
+
             var geometryEffect = DeviceManager.DefaultDeviceManager.___LegacyEffects["RoomGeometry"];
             geometryEffect.Parameters["AlphaTest"].SetValue(HideTransparentFaces);
 
@@ -2931,7 +2945,7 @@ namespace TombEditor.Controls
                             geometryEffect.Parameters["ModelViewProjection"].SetValue((geo.ObjectMatrix * viewProjection).ToSharpDX());
 
                             // Tint unselected geometry in blue if it's not pickable, otherwise use normal or selection color
-                            if (!disableSelection && _editor.SelectedObject == geo)
+                            if (!disableSelection && isSelected(geo))
                             {
                                 geometryEffect.Parameters["UseVertexColors"].SetValue(false);
                                 geometryEffect.Parameters["Color"].SetValue(_editor.Configuration.UI_ColorScheme.ColorSelection);
