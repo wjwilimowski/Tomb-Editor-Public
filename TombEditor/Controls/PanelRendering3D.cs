@@ -792,38 +792,52 @@ namespace TombEditor.Controls
                     else if (_editor.SelectedObject != obj)
                     {
                         if (ModifierKeys.HasFlag(Keys.Control))
-                        {
-                            // Multi-select
-                            var selectedItemInstance = _editor.SelectedObject as PositionBasedObjectInstance;
-                            var selectedObjectGroup = _editor.SelectedObject as ObjectGroup;
+                        { 
+                            // User is attempting to multi-select
 
-                            var positionBased = obj as PositionBasedObjectInstance;
-                            if (positionBased != null &&
-                                (selectedItemInstance != null || selectedObjectGroup != null))
-                            {
-                                var objectGroup = selectedObjectGroup ?? new ObjectGroup(selectedItemInstance);
+                            var objPositionBased = obj as PositionBasedObjectInstance;
+                            if (objPositionBased != null)
+                            { 
+                                // We've clicked on something multi-selectable
 
-                                if (!objectGroup.Contains(positionBased))
-                                {
-                                    objectGroup.Add(positionBased);
+                                var selectedItemInstance = _editor.SelectedObject as PositionBasedObjectInstance;
+                                if (selectedItemInstance != null)
+                                { 
+                                    // Selected object is also multi-selectable or already an object-group
+
+                                    var objectGroup = selectedItemInstance as ObjectGroup ?? new ObjectGroup(selectedItemInstance);
+
+                                    if (!objectGroup.Contains(objPositionBased))
+                                    {
+                                        objectGroup.Add(objPositionBased);
+                                    }
+                                    else
+                                    {
+                                        objectGroup.Remove(objPositionBased); // Deselect
+                                    }
+
+                                    _editor.SelectedObject = objectGroup;
                                 }
                                 else
-                                {
-                                    objectGroup.Remove(positionBased);
-                                }
+                                { 
+                                    // Selected object is not mulit-selectable or there's no selected object
 
-                                _editor.SelectedObject = objectGroup;
-                            }
+                                    // We're not multi-selecting yet, but someone might want to start multi-selection
+                                    // by ctrl-clicking on the first object
+                                    _editor.SelectedObject = obj;
+                                }
+                            } // Ignore ctrl-clicks on things that are not multi-selectable
                         }
                         else
-                        {
+                        { 
+                            // User is not attempting to multi-select
+
                             // Animate objects about to be selected
                             if (obj is GhostBlockInstance && _editor.Configuration.Rendering3D_AnimateGhostBlockUnfolding)
                                 _movementTimer.Animate(AnimationMode.GhostBlockUnfold, 0.4f);
 
                             _editor.SelectedObject = obj;
                         }
-
 
                         if (obj is ItemInstance)
                             _dragObjectPicked = true; // Prepare for drag-n-drop
