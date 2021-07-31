@@ -791,38 +791,39 @@ namespace TombEditor.Controls
                     }
                     else if (_editor.SelectedObject != obj)
                     {
-                        // Animate objects about to be selected
-                        if (obj is GhostBlockInstance && _editor.Configuration.Rendering3D_AnimateGhostBlockUnfolding)
-                            _movementTimer.Animate(AnimationMode.GhostBlockUnfold, 0.4f);
-
-                        // Select object
-
-                        var selectedItemInstance = _editor.SelectedObject as PositionBasedObjectInstance;
-                        var selectedObjectGroup = _editor.SelectedObject as ObjectGroup;
-
-                        var positionBased = obj as PositionBasedObjectInstance;
-                        if (ModifierKeys.HasFlag(Keys.Control) &&
-                            positionBased != null &&
-                            (selectedItemInstance != null || selectedObjectGroup != null))
+                        if (ModifierKeys.HasFlag(Keys.Control))
                         {
-                            var objectGroup = selectedObjectGroup ?? new ObjectGroup(selectedItemInstance);
+                            // Multi-select
+                            var selectedItemInstance = _editor.SelectedObject as PositionBasedObjectInstance;
+                            var selectedObjectGroup = _editor.SelectedObject as ObjectGroup;
 
-                            if (!objectGroup.Contains(positionBased))
+                            var positionBased = obj as PositionBasedObjectInstance;
+                            if (positionBased != null &&
+                                (selectedItemInstance != null || selectedObjectGroup != null))
                             {
-                                objectGroup.Add(positionBased);
-                            }
-                            else
-                            {
-                                objectGroup.Remove(positionBased);
-                            }
+                                var objectGroup = selectedObjectGroup ?? new ObjectGroup(selectedItemInstance);
 
-                            _editor.SelectedObject = objectGroup;
+                                if (!objectGroup.Contains(positionBased))
+                                {
+                                    objectGroup.Add(positionBased);
+                                }
+                                else
+                                {
+                                    objectGroup.Remove(positionBased);
+                                }
+
+                                _editor.SelectedObject = objectGroup;
+                            }
                         }
                         else
                         {
+                            // Animate objects about to be selected
+                            if (obj is GhostBlockInstance && _editor.Configuration.Rendering3D_AnimateGhostBlockUnfolding)
+                                _movementTimer.Animate(AnimationMode.GhostBlockUnfold, 0.4f);
 
                             _editor.SelectedObject = obj;
                         }
+
 
                         if (obj is ItemInstance)
                             _dragObjectPicked = true; // Prepare for drag-n-drop
