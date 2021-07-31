@@ -1925,7 +1925,7 @@ namespace TombEditor.Controls
             var activeObjectGroup = _editor.SelectedObject as ObjectGroup;
             var isSelected = activeObjectGroup != null
                 ? (Func<LightInstance, bool>)(light => activeObjectGroup.Contains(light))
-                : eff => eff == _editor.SelectedObject;
+                : light => light == _editor.SelectedObject;
 
             _legacyDevice.SetRasterizerState(_rasterizerWireframe);
             _legacyDevice.SetVertexBuffer(_littleSphere.VertexBuffer);
@@ -2453,6 +2453,11 @@ namespace TombEditor.Controls
 
         private void DrawObjects(Matrix4x4 viewProjection, Effect effect, Room[] roomsWhoseObjectsToDraw, List<Text> textToDraw)
         {
+            var activeObjectGroup = _editor.SelectedObject as ObjectGroup;
+            var isSelected = activeObjectGroup != null
+                ? (Func<PositionBasedObjectInstance, bool>)(o => activeObjectGroup.Contains(o))
+                : o => o == _editor.SelectedObject;
+
             _legacyDevice.SetVertexBuffer(_littleCube.VertexBuffer);
             _legacyDevice.SetVertexInputLayout(VertexInputLayout.FromBuffer(0, _littleCube.VertexBuffer));
             _legacyDevice.SetIndexBuffer(_littleCube.IndexBuffer, _littleCube.IsIndex32Bits);
@@ -2463,17 +2468,20 @@ namespace TombEditor.Controls
                     _legacyDevice.SetRasterizerState(_legacyDevice.RasterizerStates.CullBack);
 
                     var color = new Vector4(0.0f, 1.0f, 0.0f, 1.0f);
-                    if (_editor.SelectedObject == instance)
+                    if (isSelected(instance))
                     {
                         color = _editor.Configuration.UI_ColorScheme.ColorSelection;
                         _legacyDevice.SetRasterizerState(_rasterizerWireframe);
 
-                        // Add text message
-                        textToDraw.Add(CreateTextTagForObject(
-                            instance.RotationPositionMatrix * viewProjection,
-                            "Camera " + (instance.Fixed ? "(Fixed)" : "") +
+                        if (_editor.SelectedObject == instance)
+                        {
+                            // Add text message
+                            textToDraw.Add(CreateTextTagForObject(
+                                instance.RotationPositionMatrix * viewProjection,
+                                "Camera " + (instance.Fixed ? "(Fixed)" : "") +
                                 " [ID = " + (instance.ScriptId?.ToString() ?? "<None>") + "]" +
                                 "\n" + GetObjectPositionString(room, instance) + BuildTriggeredByMessage(instance)));
+                        }
 
                         // Add the line height of the object
                         AddObjectHeightLine(room, instance.Position);
@@ -2492,17 +2500,20 @@ namespace TombEditor.Controls
                     _legacyDevice.SetRasterizerState(_legacyDevice.RasterizerStates.CullBack);
 
                     Vector4 color = new Vector4(0.0f, 0.0f, 1.0f, 1.0f);
-                    if (_editor.SelectedObject == instance)
+                    if (isSelected(instance))
                     {
                         color = _editor.Configuration.UI_ColorScheme.ColorSelection;
                         _legacyDevice.SetRasterizerState(_rasterizerWireframe);
 
-                        // Add text message
-                        textToDraw.Add(CreateTextTagForObject(
-                            instance.RotationPositionMatrix * viewProjection,
-                            "Flyby cam (" + instance.Sequence + ":" + instance.Number + ") " +
+                        if (_editor.SelectedObject == instance)
+                        {
+                            // Add text message
+                            textToDraw.Add(CreateTextTagForObject(
+                                instance.RotationPositionMatrix * viewProjection,
+                                "Flyby cam (" + instance.Sequence + ":" + instance.Number + ") " +
                                 "[ID = " + (instance.ScriptId?.ToString() ?? "<None>") + "]" +
                                 "\n" + GetObjectPositionString(room, instance) + BuildTriggeredByMessage(instance)));
+                        }
 
                         // Add the line height of the object
                         AddObjectHeightLine(room, instance.Position);
@@ -2522,16 +2533,19 @@ namespace TombEditor.Controls
                     _legacyDevice.SetRasterizerState(_legacyDevice.RasterizerStates.CullBack);
 
                     Vector4 color = new Vector4(0.0f, 0.0f, 1.0f, 1.0f);
-                    if (_editor.SelectedObject == instance)
+                    if (isSelected(instance))
                     {
                         color = _editor.Configuration.UI_ColorScheme.ColorSelection;
                         _legacyDevice.SetRasterizerState(_rasterizerWireframe);
 
-                        // Add text message
-                        textToDraw.Add(CreateTextTagForObject(
-                            instance.RotationPositionMatrix * viewProjection,
-                            "Sink [ID = " + (instance.ScriptId?.ToString() ?? " < None > ") + "]" +
+                        if (_editor.SelectedObject == instance)
+                        {
+                            // Add text message
+                            textToDraw.Add(CreateTextTagForObject(
+                                instance.RotationPositionMatrix * viewProjection,
+                                "Sink [ID = " + (instance.ScriptId?.ToString() ?? " < None > ") + "]" +
                                 "\n" + GetObjectPositionString(room, instance) + BuildTriggeredByMessage(instance)));
+                        }
 
                         // Add the line height of the object
                         AddObjectHeightLine(room, instance.Position);
@@ -2551,16 +2565,19 @@ namespace TombEditor.Controls
                     _legacyDevice.SetRasterizerState(_legacyDevice.RasterizerStates.CullBack);
 
                     Vector4 color = new Vector4(1.0f, 1.0f, 0.0f, 1.0f);
-                    if (_editor.SelectedObject == instance)
+                    if (isSelected(instance))
                     {
                         color = _editor.Configuration.UI_ColorScheme.ColorSelection;
                         _legacyDevice.SetRasterizerState(_rasterizerWireframe);
 
-                        // Add text message
-                        textToDraw.Add(CreateTextTagForObject(
-                            instance.RotationPositionMatrix * viewProjection,
-                            "Sound source [ID = " + (instance.ScriptId?.ToString() ?? "<None>") +
+                        if (_editor.SelectedObject == instance)
+                        {
+                            // Add text message
+                            textToDraw.Add(CreateTextTagForObject(
+                                instance.RotationPositionMatrix * viewProjection,
+                                "Sound source [ID = " + (instance.ScriptId?.ToString() ?? "<None>") +
                                 "](" + (instance.SoundId != -1 ? instance.SoundId + ": " + instance.SoundNameToDisplay : "No sound assigned yet") + ")\n" + GetObjectPositionString(room, instance)));
+                        }
 
                         // Add the line height of the object
                         AddObjectHeightLine(room, instance.Position);
@@ -2584,7 +2601,7 @@ namespace TombEditor.Controls
                         _legacyDevice.SetRasterizerState(_legacyDevice.RasterizerStates.CullBack);
 
                         Vector4 color = new Vector4(0.4f, 0.4f, 1.0f, 1.0f);
-                        if (_editor.SelectedObject == instance)
+                        if (_editor.SelectedObject == instance) // TODO
                         {
                             color = _editor.Configuration.UI_ColorScheme.ColorSelection;
                             _legacyDevice.SetRasterizerState(_rasterizerWireframe);
@@ -2615,7 +2632,7 @@ namespace TombEditor.Controls
                         _legacyDevice.SetRasterizerState(_legacyDevice.RasterizerStates.CullBack);
 
                         Vector4 color = new Vector4(0.4f, 0.4f, 1.0f, 1.0f);
-                        if (_editor.SelectedObject == instance)
+                        if (_editor.SelectedObject == instance) // TODO
                         {
                             color = _editor.Configuration.UI_ColorScheme.ColorSelection;
                             _legacyDevice.SetRasterizerState(_rasterizerWireframe);
@@ -2641,7 +2658,7 @@ namespace TombEditor.Controls
                         if (instance.Model?.DirectXModel == null || instance.Hidden)
                         {
                             Vector4 color = new Vector4(0.4f, 0.4f, 1.0f, 1.0f);
-                            if (_editor.SelectedObject == instance)
+                            if (_editor.SelectedObject == instance) // TODO
                             {
                                 color = _editor.Configuration.UI_ColorScheme.ColorSelection;
                                 _legacyDevice.SetRasterizerState(_rasterizerWireframe);
