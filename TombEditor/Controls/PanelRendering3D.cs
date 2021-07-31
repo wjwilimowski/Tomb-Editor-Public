@@ -807,16 +807,9 @@ namespace TombEditor.Controls
 
                                     var objectGroup = selectedItemInstance as ObjectGroup ?? new ObjectGroup(selectedItemInstance);
 
-                                    if (!objectGroup.Contains(objPositionBased))
-                                    {
-                                        objectGroup.Add(objPositionBased);
-                                    }
-                                    else
-                                    {
-                                        objectGroup.Remove(objPositionBased); // Deselect
-                                    }
+                                    objectGroup.AddOrRemove(objPositionBased);
 
-                                    _editor.SelectedObject = objectGroup;
+                                    _editor.SelectedObject = objectGroup.Any() ? objectGroup : null;
                                 }
                                 else
                                 { 

@@ -39,6 +39,18 @@ namespace TombLib.LevelData
         public bool Contains(PositionBasedObjectInstance obInstance) => _objects.Contains(obInstance);
         public bool Any() => _objects.Any();
 
+        public void AddOrRemove(PositionBasedObjectInstance objectInstance)
+        {
+            if (Contains(objectInstance))
+            {
+                Remove(objectInstance);
+            }
+            else
+            {
+                Add(objectInstance);
+            }
+        }
+
         public override void SetPosition(Vector3 position)
         {
             var difference = position - Position;
