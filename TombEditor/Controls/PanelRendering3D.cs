@@ -800,14 +800,21 @@ namespace TombEditor.Controls
                         var selectedItemInstance = _editor.SelectedObject as PositionBasedObjectInstance;
                         var selectedObjectGroup = _editor.SelectedObject as ObjectGroup;
 
-                        var itemInstance = obj as PositionBasedObjectInstance;
+                        var positionBased = obj as PositionBasedObjectInstance;
                         if (ModifierKeys.HasFlag(Keys.Control) &&
-                            itemInstance != null &&
+                            positionBased != null &&
                             (selectedItemInstance != null || selectedObjectGroup != null))
                         {
                             var objectGroup = selectedObjectGroup ?? new ObjectGroup(selectedItemInstance);
 
-                            objectGroup.Add(itemInstance);
+                            if (!objectGroup.Contains(positionBased))
+                            {
+                                objectGroup.Add(positionBased);
+                            }
+                            else
+                            {
+                                objectGroup.Remove(positionBased);
+                            }
 
                             _editor.SelectedObject = objectGroup;
                         }
