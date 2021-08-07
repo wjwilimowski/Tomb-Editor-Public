@@ -614,7 +614,7 @@ namespace TombEditor
 
             if (@object is ObjectGroup)
             {
-                foreach (var o in (ObjectGroup)@object)
+                foreach (var o in ((ObjectGroup)@object).ToList())
                 {
                     RaiseEvent(new ObjectChangedEvent { Room = room, Object = o, ChangeType = changeType });
                 }
