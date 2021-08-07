@@ -51,13 +51,13 @@ namespace TombLib.LevelData
             }
         }
 
-        public override void SetPosition(Vector3 position)
+        protected override void SetPosition(Vector3 position)
         {
             var difference = position - Position;
             base.SetPosition(position);
 
             foreach (var i in _objects)
-                i.SetPosition(i.Position + difference);
+                i.Position = i.Position + difference;
         }
 
         private float _rotationY;
@@ -95,7 +95,7 @@ namespace TombLib.LevelData
                 var x = distance.X * cos - distance.Z * sin + Position.X;
                 var z = distance.X * sin + distance.Z * cos + Position.Z;
 
-                i.SetPosition(new Vector3(x, i.Position.Y, z));
+                i.Position =new Vector3(x, i.Position.Y, z);
             }
         }
 

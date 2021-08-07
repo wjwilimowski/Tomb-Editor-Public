@@ -223,11 +223,22 @@ namespace TombLib.LevelData
 
     public abstract class PositionBasedObjectInstance : ObjectInstance, ISpatial
     {
-        public Vector3 Position { get; set; }
-
-        public virtual void SetPosition(Vector3 position)
+        private Vector3 _position;
+        public Vector3 Position
         {
-            Position = position;
+            get
+            {
+                return _position;
+            }
+            set
+            {
+                SetPosition(value);
+            }
+        }
+
+        protected virtual void SetPosition(Vector3 position)
+        {
+            _position = position;
         }
 
         public VectorInt2 SectorPosition

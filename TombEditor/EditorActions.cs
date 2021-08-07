@@ -768,7 +768,7 @@ namespace TombEditor
             }
 
             // Update position
-            instance.SetPosition(pos);
+            instance.Position = pos;
 
             // Update state
             if (instance is LightInstance)
@@ -1908,7 +1908,7 @@ namespace TombEditor
             int y = (block.Floor.XnZp + block.Floor.XpZp + block.Floor.XpZn + block.Floor.XnZn) / 4;
 
             var placedPosition = new Vector3(pos.X * 1024 + 512, y * 256, pos.Y * 1024 + 512);
-            instance.SetPosition(placedPosition);
+            instance.Position = placedPosition;
             room.AddObject(_editor.Level, instance);
             if (instance is LightInstance)
             {
