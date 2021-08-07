@@ -1935,12 +1935,20 @@ namespace TombEditor.Controls
             return message;
         }
 
-        private void DrawLights(Matrix4x4 viewProjection, Effect effect, Room[] roomsWhoseObjectsToDraw, List<Text> textToDraw)
+        private Func<ObjectInstance, bool> GetIsObjectSelectedFunction()
         {
             var activeObjectGroup = _editor.SelectedObject as ObjectGroup;
-            var isSelected = activeObjectGroup != null
-                ? (Func<LightInstance, bool>)(light => activeObjectGroup.Contains(light))
-                : light => light == _editor.SelectedObject;
+            if (activeObjectGroup != null)
+            {
+                return activeObjectGroup.Contains;
+            }
+
+            return o => o == _editor.SelectedObject;
+        }
+
+        private void DrawLights(Matrix4x4 viewProjection, Effect effect, Room[] roomsWhoseObjectsToDraw, List<Text> textToDraw)
+        {
+            var isSelected = GetIsObjectSelectedFunction();
 
             _legacyDevice.SetRasterizerState(_rasterizerWireframe);
             _legacyDevice.SetVertexBuffer(_littleSphere.VertexBuffer);
@@ -2468,10 +2476,7 @@ namespace TombEditor.Controls
 
         private void DrawObjects(Matrix4x4 viewProjection, Effect effect, Room[] roomsWhoseObjectsToDraw, List<Text> textToDraw)
         {
-            var activeObjectGroup = _editor.SelectedObject as ObjectGroup;
-            var isSelected = activeObjectGroup != null
-                ? (Func<PositionBasedObjectInstance, bool>)(o => activeObjectGroup.Contains(o))
-                : o => o == _editor.SelectedObject;
+            var isSelected = GetIsObjectSelectedFunction();
 
             _legacyDevice.SetVertexBuffer(_littleCube.VertexBuffer);
             _legacyDevice.SetVertexInputLayout(VertexInputLayout.FromBuffer(0, _littleCube.VertexBuffer));
@@ -2805,6 +2810,8 @@ namespace TombEditor.Controls
             if (moveablesToDraw.Count == 0)
                 return;
 
+            var isSelected = GetIsObjectSelectedFunction();
+
             var activeObjectGroup = _editor.SelectedObject as ObjectGroup;
 
             _legacyDevice.SetBlendState(_legacyDevice.BlendStates.Opaque);
@@ -2852,10 +2859,7 @@ namespace TombEditor.Controls
 
                         foreach (var mov in movGroup)
                         {
-                            var isSelected = _editor.SelectedObject == mov ||
-                                             activeObjectGroup != null && activeObjectGroup.Contains(mov);
-
-                            if (!disableSelection && isSelected) // Selection
+                            if (!disableSelection && isSelected(mov)) // Selection
                                 skinnedModelEffect.Parameters["Color"].SetValue(_editor.Configuration.UI_ColorScheme.ColorSelection);
                             else
                             {
@@ -2913,10 +2917,7 @@ namespace TombEditor.Controls
             if (importedGeometryToDraw.Count == 0)
                 return;
 
-            var activeObjectGroup = _editor.SelectedObject as ObjectGroup;
-            var isSelected = activeObjectGroup != null
-                ? (Func<PositionBasedObjectInstance, bool>)(o => activeObjectGroup.Contains(o))
-                : o => o == _editor.SelectedObject;
+            var isSelected = GetIsObjectSelectedFunction();
 
             var geometryEffect = DeviceManager.DefaultDeviceManager.___LegacyEffects["RoomGeometry"];
             geometryEffect.Parameters["AlphaTest"].SetValue(HideTransparentFaces);
@@ -3035,6 +3036,8 @@ namespace TombEditor.Controls
             if (staticsToDraw.Count == 0)
                 return;
 
+            var isSelected = GetIsObjectSelectedFunction();
+
             var activeObjectGroup = _editor.SelectedObject as ObjectGroup;
 
             _legacyDevice.SetBlendState(_legacyDevice.BlendStates.Opaque);
@@ -3073,10 +3076,7 @@ namespace TombEditor.Controls
 
                         foreach (var st in stGroup)
                         {
-                            var isSelected = _editor.SelectedObject == st ||
-                                             activeObjectGroup != null && activeObjectGroup.Contains(st);
-
-                            if (!disableSelection && isSelected)
+                            if (!disableSelection && isSelected(st))
                                 staticMeshEffect.Parameters["Color"].SetValue(_editor.Configuration.UI_ColorScheme.ColorSelection);
                             else
                             {
