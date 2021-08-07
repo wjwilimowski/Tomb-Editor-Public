@@ -813,11 +813,20 @@ namespace TombEditor.Controls
 
                                     objectGroup.AddOrRemove(objPositionBased);
 
-                                    _editor.SelectedObject = objectGroup.Any() ? objectGroup : null;
+                                    if (objectGroup.Count() > 1)
+                                    {
+                                        // There is more than one object in the group, keep it
+                                        _editor.SelectedObject = objectGroup;
+                                    }
+                                    else
+                                    {
+                                        // We're left with one object, there is no reason to keep the object group
+                                        _editor.SelectedObject = objectGroup.FirstOrDefault();
+                                    }
                                 }
                                 else
                                 { 
-                                    // Selected object is not mulit-selectable or there's no selected object
+                                    // Selected object is not multi-selectable or there's no selected object
 
                                     // We're not multi-selecting yet, but someone might want to start multi-selection
                                     // by ctrl-clicking on the first object
