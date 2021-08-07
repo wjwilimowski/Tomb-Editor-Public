@@ -185,12 +185,11 @@ namespace TombEditor.Controls
 
             SetStyle(ControlStyles.Selectable | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
 
-            ReloadIsObjectPartOfSelectionFunction();
-
             if (LicenseManager.UsageMode == LicenseUsageMode.Runtime)
             {
                 _editor = Editor.Instance;
                 _editor.EditorEventRaised += EditorEventRaised;
+                ReloadIsObjectPartOfSelectionFunction();
 
                 _frustum = new Frustum();
 
