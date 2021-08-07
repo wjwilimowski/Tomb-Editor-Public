@@ -1907,8 +1907,7 @@ namespace TombEditor
             Block block = room.GetBlock(pos);
             int y = (block.Floor.XnZp + block.Floor.XpZp + block.Floor.XpZn + block.Floor.XnZn) / 4;
 
-            var placedPosition = new Vector3(pos.X * 1024 + 512, y * 256, pos.Y * 1024 + 512);
-            instance.Position = placedPosition;
+            instance.Position = new Vector3(pos.X * 1024 + 512, y * 256, pos.Y * 1024 + 512);
             room.AddObject(_editor.Level, instance);
             if (instance is LightInstance)
             {
@@ -4028,6 +4027,16 @@ namespace TombEditor
             // To prevent that, we block copying of such entries.
             if (instance is ImportedGeometryInstance && (instance as ImportedGeometryInstance)?.Model == null)
                 return;
+
+            if (instance is ObjectGroup)
+            {
+                // HACK: Same thing for each object in multi-selection
+                foreach (var groupedObject in instance as ObjectGroup)
+                {
+                    if (groupedObject is ImportedGeometryInstance && (groupedObject as ImportedGeometryInstance)?.Model == null)
+                        return;
+                }
+            }
 
             if (_editor.SelectedObject == null && instance != null)
             {
